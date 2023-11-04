@@ -1,0 +1,380 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Préstamo</title>
+</head>
+<body>
+    <h1>Realizar Préstamo</h1>
+    <form action="/realizarPrestamo" method="post">
+        <label for="idLector">ID del Lector:</label>
+        <input type="text" id="idLector" name="idLector" required><br><br>
+    
+        <label for="idLibro">ID del Libro:</label>
+        <input type="text" id="idLibro" name="idLibro" required><br><br>
+    
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required><br><br>
+    
+        <label for="fechaEntrega">Fecha de Entrega:</label>
+        <input type="date" id="fechaEntrega" name="fechaEntrega" required><br><br>
+    
+        <label for="fechaDevolucion">Fecha de Devolución:</label>
+        <input type="date" id="fechaDevolucion" name="fechaDevolucion" required><br><br>
+    
+        <input type="submit" value="Realizar Préstamo">
+    </form>    
+</body>
+</html>-->
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libros y Lectores</title>
+</head>
+<body>
+    <div style="float: left; width: 50%;">
+        <h2>Formulario para Realizar Préstamo</h2>
+        <form action="/realizarPrestamo" method="POST">
+
+            <label for="idLector">ID del Lector:</label>
+            <input type="text" name="idLector" required><br>
+
+            <label for="idLibro">ID del Libro:</label>
+            <input type="text" name="idLibro" required><br>
+
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" name="cantidad" required><br><br>
+        
+            <label for="fechaEntrega">Fecha de Entrega:</label>
+            <input type="date" id="fechaEntrega" name="fechaEntrega" required><br><br>
+        
+            <label for="fechaDevolucion">Fecha de Devolución:</label>
+            <input type="date" id="fechaDevolucion" name="fechaDevolucion" required><br><br>
+
+            <input type="submit" value="Realizar Préstamo">
+        </form>
+    </div>
+
+    <div style="float: right; width: 50%;">
+        <div style="float: left; width: 100%;">
+            <h2>Lista de Libros</h2>
+            <a href="{{ url_for('agregarLibro') }}">AGREGAR NUEVO LIBRO</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Portada</th>
+                        <th>ISBN</th>
+                        <th>Autor</th>
+                        <th>Género</th>
+                        <th>Editorial</th>
+                        <th>Cantidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for libro in libros %}
+                    <tr>
+                        <td>{{ libro['titulo'] }}</td>
+                        <td><img src="{{ libro['portada'] }}"></td>
+                        <td>{{ libro['isbn'] }}</td>
+                        <td>{{ libro['autor'] }}</td>
+                        <td>{{ libro['genero'] }}</td>
+                        <td>{{ libro['editorial'] }}</td>
+                        <td>{{ libro['cantidad'] }}</td>
+                        <td>
+                            
+                            <button>Editar</button>
+                            <button>Eliminar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="float: left; width: 100%;">
+            <h2>Lista de Lectores</h2>
+            <a href="{{ url_for('agregarLector') }}">AGREGAR NUEVO LECTOR</a>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>DNI</th>
+                        <th>Email</th>
+                        <th>Domicilio</th>
+                        <th>Telefono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lector in lectores %}
+                    <tr>
+                        <td>{{ lector.nombre }}</td>
+                        <td>{{ lector.apellido }}</td>
+                        <td>{{ lector.dni }}</td>
+                        <td>{{ lector.email }}</td>
+                        <td>{{ lector.domicilio }}</td>
+                        <td>{{ lector.telefono }}</td>
+                        <td>
+                           
+                            <button>Editar</button>
+                            <button>Eliminar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html> -->
+
+<!--<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libros, Lectores y Préstamos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Formulario para Realizar Préstamo</h2>
+                <form action="/realizarPrestamo" method="POST">
+                    <label for="idLector">ID del Lector:</label>
+                    <input type="text" name="idLector" required><br>
+
+                    <label for="idLibro">ID del Libro:</label>
+                    <input type="text" name="idLibro" required><br>
+
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" required><br><br>
+                
+                    <label for="fechaEntrega">Fecha de Entrega:</label>
+                    <input type="date" id="fechaEntrega" name="fechaEntrega" required><br><br>
+                
+                    <label for="fechaDevolucion">Fecha de Devolución:</label>
+                    <input type="date" id="fechaDevolucion" name="fechaDevolucion" required><br><br>
+
+                    <input type="submit" value="Realizar Préstamo">
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Lista de Libros</h2>
+                        <a href="{{ url_for('agregarLibro') }}">AGREGAR NUEVO LIBRO</a>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Portada</th>
+                                    <th>ISBN</th>
+                                    <th>Autor</th>
+                                    <th>Género</th>
+                                    <th>Editorial</th>
+                                    <th>Cantidad</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for libro in libros %}
+                                <tr>
+                                    <td>{{ libro['titulo'] }}</td>
+                                    <td><img src="{{ libro['portada'] }}"></td>
+                                    <td>{{ libro['isbn'] }}</td>
+                                    <td>{{ libro['autor'] }}</td>
+                                    <td>{{ libro['genero'] }}</td>
+                                    <td>{{ libro['editorial'] }}</td>
+                                    <td>{{ libro['cantidad'] }}</td>
+                                    <td>
+                                        
+                                        <button>Editar</button>
+                                        <button>Eliminar</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Lista de Lectores</h2>
+                        <a href="{{ url_for('agregarLector') }}">AGREGAR NUEVO LECTOR</a>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Apellido</th>
+                                    <th>DNI</th>
+                                    <th>Email</th>
+                                    <th>Domicilio</th>
+                                    <th>Telefono</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for lector in lectores %}
+                                <tr>
+                                    <td>{{ lector.nombre }}</td>
+                                    <td>{{ lector.apellido }}</td>
+                                    <td>{{ lector.dni }}</td>
+                                    <td>{{ lector.email }}</td>
+                                    <td>{{ lector.domicilio }}</td>
+                                    <td>{{ lector.telefono }}</td>
+                                    <td>
+                                       
+                                        <button>Editar</button>
+                                        <button>Eliminar</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Libros, Lectores y Préstamos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/registroPrestamo.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Formulario para Realizar Préstamo</h2>
+                <form action="/realizarPrestamo" method="POST">
+                    <!-- Agrega aquí tus campos de formulario, como idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, etc. -->
+                    <label for="idLector">ID del Lector:</label>
+                    <input type="text" name="idLector" required><br>
+
+                    <label for="idLibro">ID del Libro:</label>
+                    <input type="text" name="idLibro" required><br>
+
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" required><br><br>
+                
+                    <label for="fechaEntrega">Fecha de Entrega:</label>
+                    <input type="date" id="fechaEntrega" name="fechaEntrega" required><br><br>
+                
+                    <label for="fechaDevolucion">Fecha de Devolución:</label>
+                    <input type="date" id="fechaDevolucion" name="fechaDevolucion" required><br><br>
+
+                    <input type="submit" value="Realizar Préstamo">
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <div class="container">
+                    <div class="row mb-5">
+                        <div class="col-md-12">
+                            <h2>Lista de Libros</h2>
+                            <a href="{{ url_for('agregarLibro') }}">AGREGAR NUEVO LIBRO</a>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Título</th>
+                                        <th>Portada</th>
+                                        <th>ISBN</th>
+                                        <th>Autor</th>
+                                        <th>Género</th>
+                                        <th>Editorial</th>
+                                        <th>Cantidad</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for libro in libros %}
+                                    <tr>
+                                        <td>{{ libro['titulo'] }}</td>
+                                        <td><img src="{{ libro['portada'] }}"></td>
+                                        <td>{{ libro['isbn'] }}</td>
+                                        <td>{{ libro['autor'] }}</td>
+                                        <td>{{ libro['genero'] }}</td>
+                                        <td>{{ libro['editorial'] }}</td>
+                                        <td>{{ libro['cantidad'] }}</td>
+                                        <td>
+                                            
+                                            <button>Editar</button>
+                                            <button>Eliminar</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <h2>Lista de Lectores</h2>
+                            <a href="{{ url_for('agregarLector') }}">AGREGAR NUEVO LECTOR</a>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                        <th>DNI</th>
+                                        <th>Email</th>
+                                        <th>Domicilio</th>
+                                        <th>Telefono</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lector in lectores %}
+                                    <tr>
+                                        <td>{{ lector.nombre }}</td>
+                                        <td>{{ lector.apellido }}</td>
+                                        <td>{{ lector.dni }}</td>
+                                        <td>{{ lector.email }}</td>
+                                        <td>{{ lector.domicilio }}</td>
+                                        <td>{{ lector.telefono }}</td>
+                                        <td>
+                                           
+                                            <button>Editar</button>
+                                            <button>Eliminar</button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

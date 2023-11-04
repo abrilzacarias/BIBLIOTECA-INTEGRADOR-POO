@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    
+    <title>Lista</title>
+    <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('agregarVariable', nombreColeccion=nombreColeccion)}}">
+            <button class="btn agregar">Agregar {{nombreColeccion}}</button>
+        </a>
+        <table class="table">
+           <thead>
+             <tr>
+               <th scope="col">Descripcion</th>
+               <th scope="col">Acciones</th>
+             </tr>
+           </thead>
+           <tbody>
+             {% for variable in variableLista %}
+             <tr>
+                 <td>{{ variable.descripcionOpcion }}</td>
+                 <td>
+                    <a href="{{ url_for('eliminarVariable', nombreColeccion=nombreColeccion, variableId=variable.id)}}"
+              onclick="return confirm('¿Está seguro de que desea eliminar esta opcion?');">
+                    <button class="btn eliminar"><i class="fa-solid fa-trash"></i></button>
+                </a>
+
+                    <a href="{{ url_for('actualizarVariable', nombreColeccion=nombreColeccion, variableId=variable.id)}}">
+                      <button class="btn modificar"><i class="fa-solid fa-pencil"></i></button>
+                  </a>
+                 </td>
+             </tr>
+             {% endfor %}
+           </tbody>
+         </table>
+         <a href="{{ url_for('listarLibros') }}">Volver a listar libros</a>
+</body>
+</html>

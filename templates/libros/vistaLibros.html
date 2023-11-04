@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Libros</title>
+    <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <a href="{{ url_for('agregarLibro') }}">AGREGAR NUEVO LIBRO</a>
+    <form method="POST" action="{{ url_for('listarSeleccion') }}">
+        <button type="submit" name="nombreColeccion" value="autor">Visualizar Autores</button>
+        <button type="submit" name="nombreColeccion" value="editorial">Visualizar Editoriales</button>
+        <button type="submit" name="nombreColeccion" value="genero">Visualizar Generos</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Portada</th>
+                <th>ISBN</th>
+                <th>Autor</th>
+                <th>Género</th>
+                <th>Editorial</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in libros %}
+            <tr>
+                <td>{{ libro['titulo'] }}</td>
+                <td><img src="{{ libro['portada'] }}"></td>
+                <td>{{ libro['isbn'] }}</td>
+                <td>{{ libro['autor'] }}</td>
+                <td>{{ libro['genero'] }}</td>
+                <td>{{ libro['editorial'] }}</td>
+                <td>{{ libro['cantidad'] }}</td>
+                <td>
+                    <!-- Agrega botones u opciones de acciones aquí -->
+                    <button>Editar</button>
+                    <a href="{{ url_for('eliminarLibro', idLibro=libro['idLibro'])}}"
+              onclick="return confirm('¿Está seguro de que desea eliminar este libro?');">
+                    <button class="btn eliminar"><i class="fa-solid fa-trash"></i></button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

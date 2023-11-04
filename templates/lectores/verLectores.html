@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <link rel="stylesheet" href="/static/css/verlectors.css">
+    <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
+  </head>
+  
+</body>
+  {% include 'navbar.html' %}
+  <div class="container">
+    <a href="{{ url_for('agregarLector') }}">
+      <button class="btn agregar">Agregar Lector</button>
+    </a>
+    
+   
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                    <th>Domicilio</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lector in lectores %}
+                    <tr>
+                        <td>{{ lector.nombre }}</td>
+                        <td>{{ lector.apellido }}</td>
+                        <td>{{ lector.dni }}</td>
+                        <td>{{ lector.email }}</td>
+                        <td>{{ lector.domicilio}}</td>
+                        <td>{{ lector.telefono }}</td>
+                        <td>
+                            <a href="{{ url_for('EliminarLector', lectorId=lector.id)}}"
+                          onclick="return confirm('¿Está seguro de que desea eliminar este cliente?');">
+                                <button class="btn eliminar"><i class="fa-solid fa-trash"></i></button>
+                            </a>
+            
+                            <a href="{{ url_for('ActualizarLector', lectorId=lector.id)}}">
+                                <button class="btn modificar"><i class="fa-solid fa-pencil"></i></button>
+                            </a>
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</html>

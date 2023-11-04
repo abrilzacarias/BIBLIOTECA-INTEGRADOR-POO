@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca</title>
+    <link rel="icon" href="{{ url_for('static', filename='css/img/logoNavegador.svg') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" />
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.0/firebase-database.js"></script>
+    
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</head>
+<body>
+    <div class="left-column">
+        <div class="centered-content">
+            <img src="{{ url_for('static', filename='css/img/logo.svg') }}" class="logo" alt="logo Biblioteca">
+        </div>
+    </div>
+    <div class="right-column">
+        <!-- Agrega este código al final de la columna derecha en tu archivo HTML -->
+        <div class="google-button" onclick="iniciarSesionConGoogle()">
+                <img src="{{ url_for('static', filename='css/img/google-icon.svg') }}" class="google-icon" alt="Google Icon">
+            Continuar con Google
+        </div>
+    <a href="/registro" class="boton">Registrarse</a>
+    <div class="o">
+        <img src="{{ url_for('static', filename='css/img/Divider.svg') }}"><p>o</p><img src="{{ url_for('static', filename='css/img/Divider.svg') }}">
+    </div>
+    
+    <a href="/login" class="boton">Iniciar Sesion </a>
+    
+    </div>
+</body>
+</html>

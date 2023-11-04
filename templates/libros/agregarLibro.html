@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario para Agregar un Nuevo Libro</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Agregar un nuevo libro</h1>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <form method="POST" action="/agregarLibro" id="libroForm" enctype="multipart/form-data">
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" required><br>
+
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required><br>
+
+        <label for="portada">Portada:</label>
+        <input type="file" id="portada" name="portada" required><br>
+
+        <label for="idAutor">Autor:</label>
+        <input type="text" id="idAutor" name="idAutor[]" placeholder="Buscar...">
+        <button type="button" onclick="listarOpciones('autor', 'resultadosAutor')">Buscar</button>
+        <div id="resultadosAutor"></div>
+
+        <!-- Añade un formulario para agregar un nuevo autor -->   
+        <div id="checkboxes">
+            <!-- Tus checkboxes irán aquí -->
+        </div>
+
+        <label for="idEditorial">Editorial:</label>
+        <input type="text" id="idEditorial[]" name="idEditorial[]">
+
+        <button type="button" id="buscarEditorial" onclick="listarOpciones('editorial', 'resultadosEditorial')">Buscar</button><br>
+        <div id="resultadosEditorial"></div>
+
+        <label for="idGenero">Género:</label>
+        <input type="text" id="idGenero[]" name="idGenero[]">
+        <button type="button" id="buscarGenero" onclick="listarOpciones('genero', 'resultadosGenero')">Buscar</button><br>
+        <div id="resultadosGenero"></div>
+        
+        <label for="cantidad">Cantidad:</label>
+        <input type="text" id="cantidad" name="cantidad" required><br>
+
+        <button type="submit" class="btn agregar">Agregar</button>
+    </form>
+
+    <script src="../static/js/opciones.js"></script>
+</body>
+</html>

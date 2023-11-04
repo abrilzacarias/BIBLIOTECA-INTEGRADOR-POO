@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+
+body {
+    display: flex;
+    justify-content: space-between;
+    font-family: DM Sans, sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 26px; /* 130% */
+    margin: 0;
+}
+
+.left-column {
+    width: 60%;
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    flex-direction: column; /* Alinea el contenido en columna */
+}
+
+.centered-content {
+    text-align: center; /* Opcional: para centrar el contenido horizontalmente */
+}
+.right-column {
+    width: 40%;
+    background-color: black;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Establece la altura de la columna al 100% de la altura de la ventana */
+}
+
+.logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 50vh; /* Establece la altura al 50% de la altura de la ventana */
+
+    /* Agregar estilos para hacerlo más pequeño en pantallas pequeñas */
+    padding: 10px;
+    font-size: 14px;
+
+    /* Media query para ajustar el tamaño en pantallas pequeñas */
+    @media (max-width: 768px) {
+        height: 30vh; /* Establece la altura al 30% de la altura de la ventana */
+        font-size: 12px;
+    }
+}
+
+.boton {
+    display: block;
+    width: 40%;
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    border-radius: 100px;
+}
+
+.boton:hover{
+    background-color: rgb(206, 200, 246)
+}
+
+.google-button {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra horizontalmente */
+    background-color: white;
+    color: black;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 100px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background-color: rgb(206, 200, 246)
+}
+
+/* Estilo para el ícono de Google */
+.google-icon {
+    width: 30px; /* Ajusta el ancho según tus necesidades */
+    height: 30px; /* Ajusta la altura según tus necesidades */
+    margin-right: 10px; /* Espacio entre el ícono y el texto */
+}
+
+.o img, .o p {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 15px;
+}
