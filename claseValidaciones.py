@@ -1,4 +1,5 @@
 import re
+import datetime
 
 class Validaciones:
     def __init__(self):
@@ -71,3 +72,35 @@ class Validaciones:
             return "La contraseña debe contener al menos un carácter especial: !@#$%^&*. "
         
         return ''  # La contraseña es válida
+    
+    def validarFechaDevolucionPrestamo(self, fechaDevolucionPrestamo):
+        fechaDevolucion = datetime.datetime.strptime(fechaDevolucionPrestamo, '%Y-%m-%d').date()
+        fechaActual = datetime.date.today()
+        if fechaDevolucion < fechaActual:  
+            return False
+        else:
+            return True
+    
+    def obtenerFechaActualStr(self):
+        fechaActual = datetime.date.today().strftime('%Y-%m-%d')
+        return fechaActual
+    
+    def obtenerFechaActual(self):
+        fechaActual = datetime.date.today()
+        return fechaActual
+    
+    def verificarEstadoDevolucion(self, fechaDevolucionPrestamo):
+        # Obtener la fecha actual
+        fechaActual = self.obtenerFechaActual()
+        fechaDevolucion = self.convertirFechaAFormatoFecha(fechaDevolucionPrestamo)
+
+        # Comparar la fecha actual con la fecha de devolución
+        if fechaActual > fechaDevolucion:
+            return "LIBRO NO DEVUELTO"
+        else:
+            return True
+        
+    def convertirFechaAFormatoFecha(self, fecha):
+        fechaDevolucion = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
+        return fechaDevolucion
+

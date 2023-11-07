@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/agregarVariable.css">
     <title>Agregar</title>
 </head>
 <body>
-    <h2>Agregar {{ nombreColeccion }}</h2>
-        <form method="POST" action="{{ url_for('agregarVariable', nombreColeccion=nombreColeccion) }}" class="form">
+    
+    <div class="container">
+        <h2>Agregar {{ nombreColeccion }}</h2>
+            <form method="POST" action="{{ url_for('agregarVariable', nombreColeccion=nombreColeccion) }}" class="form">
 
-            <div class="form-group">
-                <label for="nuevoDoc">Agregar {{ nombreColeccion }}:</label>
-                <input type="text" class="formulario" id="nuevoDoc" name="nuevoDoc" value="" required>
-            </div>
-            
-            <button type="submit" class="btn agregar">Guardar Cambios</button>
-        </form>
-        {% if error_message %}
-            <p>{{ error_message }}</p>
-        {% endif %}
-        <a href="{{ url_for('listarSeleccion', nombreColeccion=nombreColeccion) }}">Volver a la página anterior</a>
+                <div class="group">
+                    <label for="nuevoDoc">Agregar {{ nombreColeccion }}:</label>
+                    <input type="text" class="formulario" id="nuevoDoc" name="nuevoDoc" value="" required>
+                </div>
+                
+                <button type="submit" class="boton-agregar">Guardar Cambios</button>
+            </form>
+            {% if error_message %}
+                <p>{{ error_message }}</p>
+            {% endif %}
+            <a href="{{ url_for('listarSeleccion', nombreColeccion=nombreColeccion) }}">Volver a la página anterior</a>
+    </div>
 </body>
 </html>

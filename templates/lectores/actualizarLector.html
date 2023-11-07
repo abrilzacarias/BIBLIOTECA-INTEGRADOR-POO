@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/actualizarLector.css">
     <title>Modificar Lector</title>
 </head>
 <body>
@@ -10,31 +11,35 @@
         <h2>Modificar Lector</h2>
         <form method="POST" action="{{ url_for('ActualizarLector', lectorId=lectorId) }}" class="form">
 
-            <div class="form-group">
-                <label for="nombre">Nombre:</label>
-                <input type="text" class="formulario" id="nombre" name="nombre" value="{{ lector.nombre }}" required>
+            <div class="group">
+                <label for="nombre">Nombre/s*:</label>
+                <input type="text" id="nombre" name="nombre" value="{{ lector.nombre }}" required>
             </div>
-            <div class="form-group">
-                <label for="apellido">Apellido:</label>
-                <input type="text" class="formulario" id="apellido" name="apellido" value="{{ lector.apellido }}" required>
+            <div class="group">
+                <label for="apellido">Apellido/s*:</label>
+                <input type="text"  id="apellido" name="apellido" value="{{ lector.apellido }}" required>
             </div>
-            <div class="form-group">
-                <label for="domicilio">Domicilio:</label>
-                <input type="text" class="formulario" id="domicilio" name="domicilio" value="{{ lector.domicilio }}" required>
+            <div class="group">
+                <label for="domicilio">Domicilio*:</label>
+                <input type="text" id="domicilio" name="domicilio" value="{{ lector.domicilio }}" required>
             </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="text" class="formulario" id="telefono" name="telefono" value="{{ lector.telefono }}" required>
+            <div class="campo-agrupado">
+                <div class="group">
+                    <label for="telefono">Número de teléfono*:</label>
+                    <input type="text" id="telefono" name="telefono" value="{{ lector.telefono }}" required>
+                </div>
+                <div class="group">
+                    <label for="dni">DNI*:</label>
+                    <input type="text" name="dni" id="dni" value="{{ lector.dni }}" required>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
+
+            <div class="group">
+                <label for="email">Email*:</label>
                 <input type="email" class="formulario" id="email" name="email" value="{{ lector.email }}" required>
             </div>
-            <div class="form-group">
-                <label for="dni">DNI</label>
-                <input type="text" name="dni" id="dni" value="{{ lector.dni }}" required>
-            </div>
-            <button type="submit" class="btn agregar">Guardar Cambios</button>
+            
+            <button type="submit" class="boton-agregar">Guardar Cambios</button>
         </form>
         {% if error_message %}
         <p>{{ error_message }}</p>

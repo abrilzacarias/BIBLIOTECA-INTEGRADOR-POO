@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+
+
+.group {
+    background-color: white; /* Fondo blanco para el contenedor */
+    padding: 10px;
+    border-radius: 10px; /* Bordes redondeados para el contenedor */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Prompt, sans-serif;
+}
+
+.left {
+    display: flex;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+}
+
+.left a {
+    text-decoration: none;
+    background-color: green; /* Botón de agregar en verde */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para el botón */
+    margin: 5px; /* Espacio entre los botones */
+    
+}
+
+.left button {
+    background-color: black; /* Botones negros */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno de los botones */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para los botones */
+    margin: 5px; /* Espacio entre los botones */
+    cursor:pointer;
+    font-family: Prompt, sans-serif;
+}
+
+.left button:hover {
+    background-color: #333; /* Cambia el color de fondo al pasar el cursor */
+}
+
+.buscarInput {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.buscar {
+    background-color: black; /* Botón de búsqueda en negro */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para el botón */
+}
+
+.buscar:hover {
+    background-color: #333; /* Cambia el color de fondo al pasar el cursor */
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead {
+    background-color: black; /* Fondo negro para el encabezado */
+    color: white; /* Texto blanco para el encabezado */
+}
+
+tbody {
+    /*display:flex;*/
+    background-color: white; /* Fondo blanco para el contenido */
+    color: black; /* Texto negro para el contenido */
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+td img {
+    max-width: 400px; /* Ancho máximo deseado */
+    max-height: 400px; /* Alto máximo deseado */
+    width: auto; /* Para mantener la proporción original de la imagen */
+    height: auto; /* Para mantener la proporción original de la imagen */
+}
+
+.btn-eliminar {
+    background-color: #f24539;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 70px;
+    margin-top: -37px;
+  }
+.btn-eliminar:hover {
+    background-color: #bb2b2b;
+  }
+  
+.btn-modificar {
+    background-color:goldenrod;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+.btn-modificar:hover {
+    background-color: #FFFF00;
+  }
+
+.btn {
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+.descripciones {
+    white-space: pre-line;
+}
+
+/* Estilos personalizados para los checkboxes generados dinámicamente */
+.custom-control-input[type="checkbox"] ~ .custom-control-label::before {
+    /* Agrega aquí tus estilos personalizados, como background-color, color, etc. */
+    background-color: green; /* Cambia 'yourColor' al color deseado */
+    /* ... */
+}

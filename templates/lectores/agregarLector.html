@@ -3,43 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/agregarLector.css">
     <title>AGREGAR NUEVO LECTOR</title>
 </head>
 <body>
     <div class="container">
         <h1>AGREGAR NUEVO LECTOR</h1>
         <form method="POST" action="/agregarLector" class="client-form">
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
+            <div class="group">
+                <label for="nombre">Nombre/s*:</label>
                 <input type="text" name="nombre" id="nombre" required>
             </div>
 
-            <div class="form-group">
-                <label for="apellido">Apellido</label>
+            <div class="group">
+                <label for="apellido">Apellido/s*:</label>
                 <input type="text" name="apellido" id="apellido" required>
             </div>
-
-            <div class="form-group">
-                <label for="email">Correo Electrónico</label>
+            
+            <div class="group">
+                <label for="email">Correo Electrónico*:</label>
                 <input type="email" name="email" id="email" required>
             </div>
 
-            <div class="form-group">
-                <label for="domicilio">Domicilio</label>
+            <div class="group">
+                <label for="domicilio">Domicilio*:</label>
                 <input type="text" name="domicilio" id="domicilio" required>
             </div>
+            
+            
+            <div class="campo-agrupado"> 
+                <div class="group">
+                    <label for="telefono">Número de teléfono*:</label>
+                    <input type="text" name="telefono" id="telefono" required>
+                </div>
 
-            <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input type="text" name="telefono" id="telefono" required>
+                <div class="group">
+                    <label for="dni">DNI*:</label>
+                    <input type="text" name="dni" id="dni" required>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label for="dni">DNI</label>
-                <input type="text" name="dni" id="dni" required>
+            <div class="group">
+                <button type="submit" class="boton-agregar">Agregar Lector</button>
             </div>
-
-            <button type="submit" class="btn-submit">Agregar Lector</button>
+            
         </form>
 
         <a href="/verLectores" class="btn-back">Atras</a>

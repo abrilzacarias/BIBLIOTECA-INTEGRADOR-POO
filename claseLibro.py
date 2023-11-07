@@ -81,9 +81,9 @@ class Libro():
             editorialDescripciones = [Editorial(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idEditoriales]
 
             # Unir las descripciones en una sola cadena separada por comas
-            autorDescripciones = ", ".join(autorDescripciones)
-            generoDescripciones = ", ".join(generoDescripciones)
-            editorialDescripciones = ", ".join(editorialDescripciones)
+            autorDescripciones = "\n".join(autorDescripciones)
+            generoDescripciones = "\n".join(generoDescripciones)
+            editorialDescripciones = "\n".join(editorialDescripciones)
 
             datosLibros['idLibro'] = libro.id
             datosLibros['titulo'] = titulo
@@ -115,8 +115,7 @@ class Libro():
         return signed_url
 
     def agregarLibro(self, isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad):
-        
-            print(f'idAutor en la funcion: {idAutor} ')
+            #print(f'idAutor en la funcion: {idAutor} ')
             # 1. Subir la imagen de la portada a Firebase Storage
             blob = bucket.blob("portadasLibros/" + portada.filename)
             blob.upload_from_string(portada.read(), content_type=portada.content_type)
@@ -135,61 +134,177 @@ class Libro():
                 'idGenero': idGenero,
                 'cantidad': cantidad,
             }
-            print(libro_data)
+            #print(libro_data)
             creacionLibro = db.collection('libros').add(libro_data)
             idLibro = creacionLibro[1].id
-              # Obtén el ID del documento creado
-            print(f"ID del libro: {idLibro}")  # Agrega una impresión para verificar el ID del libro
+            # Obtén el ID del documento creado
+            #print(f"ID del libro: {idLibro}")  # Agrega una impresión para verificar el ID del libro
             return idLibro  # Devuelve solo el ID del libro como resultado
         
 
-    def modificarLibro(self):
-        if self.__idLibro is not None:
-            # Actualiza el libro en la base de datos usando su identificador (__idLibro)
-            db.collection("libros").document(self.__idLibro).update({
-                'titulo': self.__titulo,
-                'isbn': self.__isbn,
-                'portada': self.__portada,
-                'autor': self.__autor.getDescripcionAutor(),
-                'editorial': self.__editorial.getDescripcionEditorial(),
-                'genero': self.__genero.getDescripcionGenero(),
-                'cantidad': self.__cantidad
-            })
+    def actualizarLibro(self, idLibro, isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad):
+        # 1. Subir la imagen de la portada a Firebase Storage si es necesario
+        if portada is not None:
+            blob = bucket.blob("portadasLibros/" + portada.filename)
+            blob.upload_from_string(portada.read(), content_type=portada.content_type)
+            portadaUrl = self.generar_url_firmada("portadasLibros/" + portada.filename, "biblioteca-1d610.appspot.com")
         else:
-            print("No se proporcionó un identificador de libro para la modificación.")
+            # Si la portada no cambió, conserva la URL existente
+            existing_data = db.collection('libros').document(idLibro).get()
+            portadaUrl = existing_data.get('portada')
+
+        # 2. Actualizar los datos del libro en Firestore
+        libro_data = {
+            'isbn': isbn,
+            'titulo': titulo,
+            'portada': portadaUrl,  # URL de la imagen firmada
+            'idAutor': idAutor,
+            'idEditorial': idEditorial,
+            'idGenero': idGenero,
+            'cantidad': cantidad,
+        }
+        db.collection('libros').document(idLibro).set(libro_data, merge=True)
+
+        # Devuelve el ID del libro actualizado
+        return idLibro
 
     def eliminarLibro(self, idLibro):
+            if idLibro is not None:
+                # Elimina el libro de la base de datos usando su identificador (__idLibro)
+                db.collection("libros").document(idLibro).delete()
+            else:
+                print("No se proporcionó un identificador de libro para la eliminación.")
+            
+    def obtenerLibroPorId(self, idLibro):
         if idLibro is not None:
-            # Elimina el libro de la base de datos usando su identificador (__idLibro)
-            db.collection("libros").document(idLibro).delete()
+            # Realiza una consulta para obtener los datos del libro por su ID
+            libroRef = db.collection("libros").document(idLibro)
+            libroDoc = libroRef.get()
+
+            # Verifica si el libro existe en la base de datos
+            if libroDoc.exists:
+                datosLibro = libroDoc.to_dict()
+                isbn = datosLibro.get('isbn')
+                titulo = datosLibro.get('titulo')
+                portada = datosLibro.get('portada')
+                cantidad = datosLibro.get('cantidad')
+
+                # Obtener descripciones de autor, editorial y género
+                idAutores = datosLibro.get('idAutor', [])
+                idGeneros = datosLibro.get('idGenero', [])
+                idEditoriales = datosLibro.get('idEditorial', [])
+
+                # Obtener descripciones de autores
+                autorDescripciones = [Autor(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idAutores]
+
+                # Obtener descripciones de géneros
+                generoDescripciones = [Genero(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idGeneros]
+
+                # Obtener descripciones de editoriales
+                editorialDescripciones = [Editorial(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idEditoriales]
+
+                # Unir las descripciones en una sola cadena separada por comas
+                autorDescripciones = ", ".join(autorDescripciones)
+                generoDescripciones = ", ".join(generoDescripciones)
+                editorialDescripciones = ", ".join(editorialDescripciones)
+
+                # Crear un diccionario con los datos del libro
+                datosLibro = {
+                    'idLibro': idLibro,
+                    'isbn': isbn,
+                    'titulo': titulo,
+                    'portada': portada,
+                    'autor': autorDescripciones,
+                    'idAutoresSeleccionados': idAutores,  # Agregar los IDs
+                    'editorial': editorialDescripciones,
+                    'idEditorialesSeleccionadas': idEditoriales,  # Agregar los IDs
+                    'genero': generoDescripciones,
+                    'idGenerosSeleccionados': idGeneros,  # Agregar los IDs
+                    'cantidad': cantidad
+                }
+                print('Datos del libro:', datosLibro)
+                return datosLibro
+            
+            else:
+                return None  # El libro no existe en la base de datos
         else:
-            print("No se proporcionó un identificador de libro para la eliminación.")
+            return None  # No se proporcionó un ID de libro válido
+
 
     def buscarPorAutor(self, descripcion):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
 
-        # Realiza una consulta para obtener los autores cuya descripción comience con la descripción proporcionada
+        # Realiza una consulta para obtener autores cuya descripción coincide
         autoresRef = db.collection('autor').where('descripcionAutor', '>=', descripcion).where('descripcionAutor', '<=', descripcion + '\uf8ff').stream()
 
         for autor in autoresRef:
-            # Obtenemos el ID del autor
+            # Obtenemos el ID del autor y su descripción
             idAutor = autor.id
+            #descripcionAutor = autor.to_dict().get('descripcionAutor')
 
-            # Ahora buscamos los libros por el ID del autor en la colección de libros
-            librosRef = db.collection('libros').where('idAutor', '==', idAutor).stream()
+            # Ahora busca los libros que tengan el ID del autor en su lista de autores
+            librosRef = db.collection('libros').where('idAutor', 'array_contains', idAutor).stream()
 
             for libro in librosRef:
-                datosLibro = libro.to_dict()
-                idEditorial = datosLibro.get("idEditorial")
-
-                # Obtén la descripción completa de la editorial usando la clase Editorial
-                editorialDescripcion = Editorial(idOpcion=idEditorial).obtenerDescripcionOpcion()
-
-                # Agrega los resultados a la lista
+                libro_data = libro.to_dict()
+                idLibro = libro.id
+                
+                # Obtiene las descripciones de género y editorial utilizando la función obtenerDescripcionOpcion
+                idGenero = libro_data.get('idGenero')
+                idEditorial = libro_data.get('idEditorial')
+                idAutor = libro_data.get('idAutor')
+                descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
+                descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
+                descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
+                titulo = libro_data.get('titulo')
+                
+                # Agrega los resultados a la lista, incluyendo las descripciones de género y editorial
                 resultados.append({
-                    "autor": autor.to_dict()['descripcionAutor'],
-                    "editorial": editorialDescripcion,
+                    "idLibro": idLibro,
+                    "autor": descripcionAutor,
+                    "libro": libro_data,
+                    "genero": descripcionGenero,
+                    "editorial": descripcionEditorial
+                })
+
+        return resultados
+
+
+    def buscarPorGenero(self, descripcion):
+        # Crea una lista vacía para almacenar los resultados
+        resultados = []
+
+        # Realiza una consulta para obtener géneros cuya descripción coincide
+        generoRef = db.collection('genero').where('descripcionGenero', '>=', descripcion).where('descripcionGenero', '<=', descripcion + '\uf8ff').stream()
+
+        for genero in generoRef:
+            # Obtenemos el ID del género y su descripción
+            idGenero = genero.id
+            #descripcionGenero = genero.to_dict().get('descripcionGenero')
+
+            # Ahora busca los libros que tengan el ID del género
+            librosRef = db.collection('libros').where('idGenero', 'array_contains', idGenero).stream()
+
+            for libro in librosRef:
+                libro_data = libro.to_dict()
+
+                idLibro = libro.id
+                # Obtiene las descripciones de autor y editorial utilizando la función obtenerDescripcionOpcion
+                idAutor = libro_data.get('idAutor')
+                idEditorial = libro_data.get('idEditorial')
+                idGenero = libro_data.get('idGenero')
+                descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
+                descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
+                descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
+
+                # Agrega los resultados a la lista, incluyendo las descripciones de autor y editorial
+                resultados.append({
+                    "idLibro": idLibro,
+                    "genero": descripcionGenero,
+                    "libro": libro_data,
+                    "autor": descripcionAutor,
+                    "editorial": descripcionEditorial
                 })
 
         return resultados
@@ -199,44 +314,70 @@ class Libro():
         # Crea una lista vacía para almacenar los resultados
         resultados = []
 
-        # Realiza una consulta para obtener los géneros cuya descripción comience con la descripción proporcionada
+        # Realiza una consulta para obtener editoriales cuya descripción coincide
         editorialRef = db.collection('editorial').where('descripcionEditorial', '>=', descripcion).where('descripcionEditorial', '<=', descripcion + '\uf8ff').stream()
 
         for editorial in editorialRef:
-            # Obtenemos el ID del genero
+            # Obtenemos el ID de la editorial y su descripción
             idEditorial = editorial.id
+            #descripcionEditorial = editorial.to_dict().get('descripcionEditorial')
 
-            # Ahora buscamos los libros por el ID del genero en la colección de libros
-            librosRef = db.collection('libros').where('idEditorial', '==', idEditorial).stream()
+            # Ahora busca los libros que tengan el ID de la editorial
+            librosRef = db.collection('libros').where('idEditorial', 'array_contains', idEditorial).stream()
 
             for libro in librosRef:
-                # Agrega los resultados a la lista
+                libro_data = libro.to_dict()
+
+                idLibro = libro.id
+                # Obtiene las descripciones de autor y género utilizando la función obtenerDescripcionOpcion
+                idAutor = libro_data.get('idAutor')
+                idGenero = libro_data.get('idGenero')
+                idEditorial = libro_data.get('idEditorial')
+                descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
+                descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
+                descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
+                
+                # Agrega los resultados a la lista, incluyendo las descripciones de autor y género
                 resultados.append({
-                    "editorial": editorial.to_dict()['descripcionEditorial'],
+                    "idLibro": idLibro,
+                    "editorial": descripcionEditorial,
+                    "libro": libro_data,
+                    "autor": descripcionAutor,
+                    "genero": descripcionGenero
                 })
 
         return resultados
+
         
-    def buscarPorGenero(self, descripcion):
+    def buscarPorTitulo(self, titulo):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
 
-        # Realiza una consulta para obtener los géneros cuya descripción comience con la descripción proporcionada
-        generosRef = db.collection('genero').where('descripcionGenero', '>=', descripcion).where('descripcionGenero', '<=', descripcion + '\uf8ff').stream()
+        # Realiza una consulta para obtener los libros cuyo título comience con el título proporcionado
+        librosRef = db.collection('libros').where('titulo', '>=', titulo).where('titulo', '<=', titulo + '\uf8ff').stream()
 
-        for genero in generosRef:
-            # Obtenemos el ID del genero
-            idGenero = genero.id
+        for libro in librosRef:
+            # Obtenemos el título del libro y otros datos si es necesario
+            datosLibro = libro.to_dict()
 
-            # Ahora buscamos los libros por el ID del genero en la colección de libros
-            librosRef = db.collection('libros').where('idGenero', '==', idGenero).stream()
+            idLibro = libro.id
+            # Obtén las descripciones de autor, género y editorial utilizando las clases correspondientes
+            idAutor = datosLibro.get('idAutor')
+            idGenero = datosLibro.get('idGenero')
+            idEditorial = datosLibro.get('idEditorial')
+            
+            descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
+            descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
+            descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
 
-            for libro in librosRef:
-                # Agrega los resultados a la lista
-                resultados.append({
-                    "genero": genero.to_dict()['descripcionGenero'],
-                })
+            # Agrega los resultados a la lista, incluyendo las descripciones
+            resultados.append({
+                "libro": datosLibro,
+                "idLibro": idLibro,
+                "titulo": datosLibro.get('titulo'),
+                "autor": descripcionAutor,
+                "genero": descripcionGenero,
+                "editorial": descripcionEditorial
+            })
 
         return resultados
-    
-    #def buscarPorTitulo():

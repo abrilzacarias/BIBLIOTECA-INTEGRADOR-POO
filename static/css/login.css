@@ -23,7 +23,7 @@ h1 {
 .container {
     background-color: white; /* Fondo blanco del contenedor */
     border-radius: 50px; /* Radio de borde de 100 */
-    margin: 40px; /* Margen externo para separar el contenedor del borde de la página */
+    margin: 25px; /* Margen externo para separar el contenedor del borde de la página */
     background-color: white;
     text-align: center;
     width: 50%; /* Limita el ancho del contenedor */

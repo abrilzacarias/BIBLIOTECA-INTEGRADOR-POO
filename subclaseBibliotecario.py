@@ -1,13 +1,19 @@
+#Estas líneas importan las clases y módulos necesarios.
 from clasePersona import Persona
 from clasePrestamo import Prestamo
+from claseValidaciones import Validaciones
 from config import db
 
+#La clase Bibliotecario hereda de la clase Persona. Se trata de HERENCIA
 class Bibliotecario(Persona):
+    #Inicializa una instancia de Bibliotecario con atributos. Si no se proporcionan valores, se les asigna el valor predeterminado None.
     def __init__(self, nombre=None, apellido=None, dni=None, domicilio=None, telefono=None, email=None, password=None):
+        #Esta línea llama al constructor de la clase base Persona para inicializar los atributos de persona heredados.
         super().__init__(nombre, apellido, dni, domicilio, email, telefono)
         self.__password = password
         self.__idBibliotecario = None
 
+    #Metodos setters y getters. ABSTRACCIÓN Y ENCAPSULAMIENTO
     def getPassword(self):
         return self.__password
     
@@ -19,44 +25,53 @@ class Bibliotecario(Persona):
     
     def setIdBibliotecario(self, idBibliotecario):
         self.__idBibliotecario = idBibliotecario
-   
 
-    #Método encargado de obtener los datos de un cliente por su ID
+    #Método encargado de obtener los datos de un lector por su ID
     def obtenerLectorPorId(self, idLector):
-    # Obtener un cliente por su ID
-        lectores_ref = db.collection('lectores')
-        lector_doc = lectores_ref.document(idLector).get()
+        #se obtiene una referencia a la colección de lectores en la base de datos
+        lectoresRef = db.collection('lectores')
+        #se busca un documento en la colección de lectores que coincida con el ID proporcionado
+        lectorDoc = lectoresRef.document(idLector).get()
 
-        if lector_doc.exists:
-            # El documento del cliente existe, y puedes acceder a sus datos
-            datos_lector = lector_doc.to_dict()
-            return datos_lector
+        # se verifica si el documento del lector existe en la base de datos
+        if lectorDoc.exists:
+            # si existe, se recuperan los datos del lector del documento
+            datosLector = lectorDoc.to_dict()
+            return datosLector
         else:
-            # El cliente no fue encontrado
+            #el lector no fue encontrado
             return None
-        
+    
+    # Método encargado de buscar un libro por su nombre en la base de datos
     def buscarLibroPorNombre(self, nombreLibro):
         librosRef = db.collection('libros')
-        query = librosRef.where('titulo', '>=', nombreLibro).where('titulo', '<=', nombreLibro + '\uf8ff').get()
-        for libro in query:
+        # se crea una consulta para buscar libros cuyo título esté en el rango [nombreLibro, nombreLibro + '\uf8ff']
+        consulta = librosRef.where('titulo', '>=', nombreLibro).where('titulo', '<=', nombreLibro + '\uf8ff').get()
+        # se itera a través de los resultados de la consulta
+        for libro in consulta:
+            # se recuperan los datos del libro y se almacenan en un diccionario
             datosLibro = libro.to_dict()
+            # se devuelven los datos del libro
             return datosLibro
         return None
     
-  
-    def buscarNombreLectorPorID(self,idLector):
+    # Método encargado de buscar el nombre de un lector por su ID
+    def buscarNombreLectorPorID(self, idLector):
+        #se obtiene una referencia al documento del lector por su ID en la colección 'lectores'
         lectoresRef = db.collection('lectores').document(idLector)
         documento = lectoresRef.get()
         if documento.exists:
-            datos_lector = documento.to_dict()
-            nombre = datos_lector.get('nombre', '')
-            apellido = datos_lector.get('apellido', '')
+            datosLector = documento.to_dict()
+            #se recuperan el nombre y el apellido del lector
+            nombre = datosLector.get('nombre', '')
+            apellido = datosLector.get('apellido', '')
             return f"{nombre} {apellido}"
         else:
             return None
 
-    
-    def buscarNombreLibroPorID(self,idLibro):
+    # Método encargado de buscar el nombre de un lector por su ID
+    #procedimiento similar a  buscarNombreLectorPorID() pero en la busqueda de un libro
+    def buscarNombreLibroPorID(self, idLibro):
         librosRef = db.collection('libros').document(idLibro)
         documento = librosRef.get()
         if documento.exists:
@@ -64,11 +79,25 @@ class Bibliotecario(Persona):
         else:
             return None
 
-    #Método encargado de actualizar los datos de un cliente
+    # Método encargado de buscar el nombre de un lector por su DNI en la base de datos
+    def buscarNombreLectorPorDni(self, dniLector):
+        # Se realiza una consulta en la colección 'lectores' para buscar un lector con el DNI especificado
+        lectores = db.collection('lectores').where('dni', '==', dniLector).stream()
+        for lector in lectores:
+            # Se recuperan los datos del lector actual como un diccionario
+            datosLector = lector.to_dict()
+            # Se recupera el nombre y el apellido del lector, si están disponibles
+            nombre = datosLector.get('nombre', '')
+            apellido = datosLector.get('apellido', '')
+            print(f"Nombre del lector: {nombre} {apellido}")
+            # Se combina el nombre y el apellido en un solo string y se devuelve
+            return f"{nombre} {apellido}"
+        return None
+
+    #Método encargado de agregar un nuevo lector a la base de datos
     def agregarLector(self, nombre, apellido, dni, domicilio, telefono, email):
-        print(nombre)
-        lectoresRef = db.collection("lectores")
-        lectores_data = {
+        # Se crea un diccionario con los datos del nuevo lector, utilizando capitalize() para poner en mayuscula la primera letra de nombre y apellido.
+        lectoresData = {
             'nombre': nombre.capitalize(),
             'apellido': apellido.capitalize(),
             'dni' : dni ,
@@ -76,19 +105,26 @@ class Bibliotecario(Persona):
             'domicilio' : domicilio.capitalize() ,
             'telefono' : telefono 
         }
-        print(lectores_data)
-        creacion = db.collection('lectores').add(lectores_data)
-        nueva_clave_unica = creacion[1].id
-        return nueva_clave_unica
+        print(lectoresData)
+        # Se agrega el nuevo lector a la colección 'lectores' en la base de datos
+        creacion = db.collection('lectores').add(lectoresData)
+        # Se obtiene la nueva clave única generada para el lector
+        claveUnica = creacion[1].id
+        # Se devuelve la clave única como resultado de la operación
+        return claveUnica
     
+    # Método encargado de recuperar y mostrar la lista de lectores desde la base de datos
     def mostrarLectores(self):
-        #Lee todos los documentos en la colección 'clientes' y los convierte en una lista de diccionarios.
+        #Lee todos los documentos en la colección 'lectores'.
         lectoresRef = db.collection("lectores")
         lectores = lectoresRef.stream()
         listaLectores = []
+        # Se itera a través de los documentos de los lectores
         for lector in lectores:
+            # Se convierten los datos del lector en un diccionario
             datosLector = lector.to_dict()
             docId = lector.id  # Acceso al ID del documento
+            # Se crea un diccionario con los datos del lector
             lectorDic = {
                 'id': docId,
                 'nombre': datosLector['nombre'],
@@ -98,14 +134,18 @@ class Bibliotecario(Persona):
                 'domicilio': datosLector['domicilio'],
                 'telefono': datosLector['telefono']
             }
+            # Se agrega el diccionario del lector a la lista de lectores
             listaLectores.append(lectorDic)
         return listaLectores
 
+    # Método encargado de actualizar los datos de un lector en la base de datos
     def actualizarLector(self, lectorId, nombre, apellido, dni, domicilio, telefono, email):
-        # Actualiza un cliente existente
+        # Se obtiene una referencia a la colección 'lectores' en la base de datos
         lectores = db.collection("lectores")
         lectorRef = lectores.document(lectorId)
+        # Se verifica si el lector existe en la base de datos
         if lectorRef.get().exists:
+            # Si el lector existe, se actualizan sus datos con los valores proporcionados
             lectorRef.update({
                 'nombre': nombre,
                 'apellido': apellido,
@@ -116,51 +156,77 @@ class Bibliotecario(Persona):
             })
         else:
             print("Cliente no encontrado. No se pudieron actualizar los datos.")
-            
+    
+    # Método encargado de eliminar un lector de la base de datos
     def eliminarLector(self, lectorId):
         lectores = db.collection("lectores")
         lectorRef = lectores.document(lectorId)
+        # Se verifica si el lector existe en la base de datos
         if lectorRef.get().exists:
             lectorRef.delete()
         else:
             print("Cliente no encontrado. No se pudo eliminar.")
-            
+    
+    # Método encargado de mostrar la lista de préstamos registrados
     def mostrarPrestamos(self):
         prestamosRef = db.collection("prestamos")
         prestamos = prestamosRef.stream()
+        # Se verifica el estado de los préstamos
+        self.verificarEstadoPrestamos()
         listaPrestamos = []
         for prestamo in prestamos:
             datosPrestamo = prestamo.to_dict()
             docId = prestamo.id
+            # Se crea un diccionario con los datos del préstamo
             prestamoDic = {
                 'id': docId,
                 'titulo': datosPrestamo['libroNombre'],
                 'lector': datosPrestamo['lectorNombre'],
                 'cantidad': datosPrestamo['cantidad'],
+                #CAMBIAR
                 'fechaEntrega': datosPrestamo['fechaEntrega'],
                 'fechaDevolucion': datosPrestamo['fechaDevolucion'],
-                'estado': datosPrestamo['estado']
+                'estado': datosPrestamo['estado'],
+                'idLibro': datosPrestamo['idLibro']
             }
+            # Se agrega el diccionario a la lista de préstamos
             listaPrestamos.append(prestamoDic)
+        # Se retorna la lista de préstamos
         return listaPrestamos
     
-    def cambiarEstadoPrestamo(self, prestamoId):
+    # Método encargado de cambiar el estado de un préstamo y actualizar la cantidad de libros disponibles
+    def cambiarEstadoPrestamo(self, prestamoId, idLibro):
         try:
             prestamosRef = db.collection("prestamos")
             prestamo = prestamosRef.document(prestamoId)
 
+            # Se verifica si el préstamo existe
             if prestamo.get().exists:
-                prestamo.update({'estado': 'Devuelto'})
-                return True
-            else:
-                return False
-        except Exception as e:
-            return False 
-      
-    def realizarPrestamo(self, idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado="PRESTADO"):
-        nombreLector = self.buscarNombreLectorPorID(idLector)
-        nombreLibro = self.buscarNombreLibroPorID(idLibro)
+                prestamoData = prestamo.get().to_dict()
+                print(f"prestamoData: {prestamoData}")
+                # Se actualiza el estado del préstamo a 'DEVUELTO'
+                prestamo.update({'estado': 'DEVUELTO'})
 
+                # Se obtiene una referencia al documento del libro relacionado al préstamo
+                libroRef = db.collection('libros').document(idLibro)
+                libroData = libroRef.get().to_dict()
+
+                if libroData:
+                    cantidadDisponibleActual = libroData['cantidad']
+                    cantidadLibrosPrestados = prestamoData.get('cantidad')
+                    cantidadDisponibleNueva = cantidadDisponibleActual + cantidadLibrosPrestados
+                    # Se actualiza la cantidad de libros disponibles en elstock de libros
+                    libroRef.update({'cantidad': cantidadDisponibleNueva})
+                return "EXITO AL CAMBIAR EL ESTADO DEL PRESTAMO"
+                
+            return "ERROR AL CAMBIAR EL ESTADO DEL PRESTAMO"
+        except Exception as e:
+            return False
+      
+    def realizarPrestamo(self, dniLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado="PRESTADO"):
+        nombreLector = self.buscarNombreLectorPorDni(dniLector)
+        nombreLibro = self.buscarNombreLibroPorID(idLibro)
+        print(f'nombreLector {nombreLector}, nombreLibro {nombreLibro}')
         if nombreLector and nombreLibro:
             lectorNombre = nombreLector
             libroNombre = nombreLibro
@@ -171,12 +237,13 @@ class Bibliotecario(Persona):
                 cantidadDisponible = int(libro["cantidad"])
 
                 if cantidad <= cantidadDisponible:
-                    prestamo = Prestamo(lectorNombre, libroNombre, cantidad, fechaEntrega, fechaDevolucion, estado)
+                    prestamo = Prestamo(lectorNombre, libroNombre, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado)
 
                     prestamosRef = db.collection('prestamos')
                     nuevoPrestamo = {
                         'lectorNombre': prestamo.getLectorNombre(),
                         'libroNombre': prestamo.getLibroNombre(),
+                        'idLibro': idLibro,
                         'cantidad': prestamo.getCantidad(),
                         'fechaEntrega': prestamo.getFechaEntrega(),
                         'fechaDevolucion': prestamo.getFechaDevolucion(),
@@ -189,14 +256,14 @@ class Bibliotecario(Persona):
                     libroRef.update({'cantidad': cantidadDisponible})
 
                     print("Préstamo registrado con éxito.")
+                    return True
                 else:
                     print("No hay suficientes copias disponibles de ese libro.")
+                    return False
             else:
                 print("Libro no encontrado por nombre.")
         else:
             print("Lector o libro no encontrado por ID.")
-    
-    from firebase_admin import firestore
 
     def buscarPrestamosPorNombreLector(self, inicioNombreLector):
         prestamosRef = db.collection("prestamos")
@@ -264,78 +331,80 @@ class Bibliotecario(Persona):
             lectorRef.delete()
         else:
             print("Cliente no encontrado. No se pudo eliminar.")
+
+    def verificarEstadoPrestamos(self):
+        # Consulta todos los préstamos (reemplaza "prestamos" con la colección real)
+        prestamosRef = db.collection('prestamos').stream()
+
+        for prestamo in prestamosRef:
+            datosPrestamo = prestamo.to_dict()
+            fechaDevolucion = datosPrestamo.get('fechaDevolucion')
+            estado = datosPrestamo.get('estado')
+            print(estado)
+            if estado != 'DEVUELTO':
+                estado = Validaciones().verificarEstadoDevolucion(fechaDevolucion)
+
+                print(f"ID del préstamo: {prestamo.id}, Estado: {estado}")
+                if estado == "LIBRO NO DEVUELTO":
+                    # Cambia el estado del préstamo a "NO DEVUELTO" en la base de datos
+                    db.collection('prestamos').document(prestamo.id).update({'estado': 'NO DEVUELTO'})
     
-       
-    '''def realizarPrestamo(self, idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado="PRESTADO"):
-        bibliotecario = Bibliotecario()
-        nombreLector = bibliotecario.buscarNombreLectorPorID(idLector)
-        nombreLibro = bibliotecario.buscarNombreLibroPorID(idLibro)
+    def buscarLectoresPorNombre(self, inicioNombre):
+        lectoresRef = db.collection("lectores")
+        lectores = lectoresRef.where("nombre", ">=", inicioNombre).where("nombre", "<", inicioNombre + u'\uf8ff').stream()
+        listaLectores = []
 
-        if nombreLector and nombreLibro:
-            lectorNombre = nombreLector
-            libroNombre = nombreLibro
+        for prestamo in lectores:
+            datosLector = prestamo.to_dict()
+            docId = prestamo.id
+            prestamoDic = {
+                'id': docId,
+                'nombre': datosLector['nombre'],
+                'apellido': datosLector['apellido'],
+                'dni' : datosLector['dni'],
+                'email': datosLector['email'],
+                'domicilio': datosLector['domicilio'],
+                'telefono': datosLector['telefono']
+            }
+            listaLectores.append(prestamoDic)
+        return listaLectores
+    
+    def buscarLectoresPorDni(self, inicioDni):
+        lectoresRef = db.collection("lectores")
+        lectores = lectoresRef.where("dni", ">=", inicioDni).where("dni", "<", inicioDni + u'\uf8ff').stream()
+        listaLectores = []
 
-            libro = bibliotecario.buscarLibroPorNombre(libroNombre)
-            if libro:
-                cantidadDisponible = libro["cantidad"]
+        for prestamo in lectores:
+            datosLector = prestamo.to_dict()
+            docId = prestamo.id
+            prestamoDic = {
+                'id': docId,
+                'nombre': datosLector['nombre'],
+                'apellido': datosLector['apellido'],
+                'dni' : datosLector['dni'],
+                'email': datosLector['email'],
+                'domicilio': datosLector['domicilio'],
+                'telefono': datosLector['telefono']
+            }
+            listaLectores.append(prestamoDic)
+        return listaLectores
+    
+    def buscarLectoresPorApellido(self, inicioApellido):
+        lectoresRef = db.collection("lectores")
+        lectores = lectoresRef.where("apellido", ">=", inicioApellido).where("apellido", "<", inicioApellido + u'\uf8ff').stream()
+        listaLectores = []
 
-
-                prestamo = Prestamo(lectorNombre, libroNombre, cantidad, fechaEntrega, fechaDevolucion, estado)
-
-                prestamosRef = db.collection('prestamos')
-                nuevoPrestamo = {
-                    'lectorNombre': prestamo.getLectorNombre(),
-                    'libroNombre': prestamo.getLibroNombre(),
-                    'cantidad': prestamo.getCantidad(),
-                    'fechaEntrega': prestamo.getFechaEntrega(),
-                    'fechaDevolucion': prestamo.getFechaDevolucion(),
-                    'estado': prestamo.getEstado()
-                }
-
-                prestamosRef.add(nuevoPrestamo)
-                print("Préstamo registrado con éxito.")
-            else:
-                print("No hay suficientes copias disponibles de ese libro.")
-        else:
-            print("Lector o libro no encontrado por ID.")'''
-            
-
-'''idLector = "2it3rKmV7LPveYJbDDp9"  # Reemplaza con un ID válido
-idLibro = "qPpR5pGmWHE2E3VHyuzO"    # Reemplaza con un ID válido
-cantidad = 2
-fechaEntrega = "2023-11-03"  # Reemplaza con una fecha válida
-fechaDevolucion = "2023-11-10"  # Reemplaza con una fecha válida
-estado = "PRESTADO"
-bibliotecario = Bibliotecario()  # Crea una instancia de la clase Bibliotecario
-
-bibliotecario.realizarPrestamo(idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion,estado)'''
-
-#Bibliotecario.realizarPrestamo(idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado)
-
-'''bibliotecario = Bibliotecario()  # Crea una instancia de la clase Bibliotecario
-resultados = bibliotecario.buscarLibroPorNombre("HOLAABRIL")
-if resultados:
-    for clave, valor in resultados.items():
-        print(f"{clave}: {valor}")  # Imprimir clave y valor
-else:
-    print("No se encontraron libros con ese nombre.")'''
-'''    
-bibliotecario = Bibliotecario()
-
-# Llama al método mostrarPrestamos para obtener la lista de préstamos
-lista_prestamos = bibliotecario.mostrarPrestamos()
-
-# Comprueba si se obtuvieron préstamos y los imprime
-if lista_prestamos:
-    for prestamo in lista_prestamos:
-        print("ID:", prestamo["id"])
-        print("Título del Libro:", prestamo["titulo"])
-        print("Nombre del Lector:", prestamo["lector"])
-        print("Cantidad:", prestamo["cantidad"])
-        print("Fecha de Entrega:", prestamo["fechaEntrega"])
-        print("Fecha de Devolución:", prestamo["fechaDevolucion"])
-        print("Estado:", prestamo["estado"])
-        print("------------")
-else:
-    print("No se encontraron préstamos.")
-'''   
+        for prestamo in lectores:
+            datosLector = prestamo.to_dict()
+            docId = prestamo.id
+            prestamoDic = {
+                'id': docId,
+                'nombre': datosLector['nombre'],
+                'apellido': datosLector['apellido'],
+                'dni' : datosLector['dni'],
+                'email': datosLector['email'],
+                'domicilio': datosLector['domicilio'],
+                'telefono': datosLector['telefono']
+            }
+            listaLectores.append(prestamoDic)
+        return listaLectores

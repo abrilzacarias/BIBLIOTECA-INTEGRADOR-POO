@@ -18,31 +18,33 @@ class Opciones():
     def setDescripcionOpcion(self, descripcionOpcion):
         self.__descripcionOpcion = descripcionOpcion
 
-    def listarOpciones(self, nombreColeccion):
+    #def listarOpciones(self, nombreColeccion):
+        #opcionesRef = db.collection(nombreColeccion)
+        #listaOpciones = [{"id": doc.id, "descripcionOpcion": doc.to_dict()[f'descripcion{nombreColeccion.capitalize()}']} for doc in opcionesRef.stream()]
+        #return listaOpciones
+#PROBAR SI ANDA CON GEEEETTTSTTSSSS
+    def agregarOpcion(self):
+        opcionesRef = db.collection(self.__nombreColeccion)
+        opcionesRef.add({f'descripcion{self.__nombreColeccion.capitalize()}': self.__descripcionOpcion})
+
+    def modificarOpcion(self):
+        if self.__idOpcion is not None:
+            db.collection(self.__nombreColeccion).document(self.__idOpcion).update({
+                f'descripcion{self.__nombreColeccion.capitalize()}': self.__descripcionOpcion,
+            })
+        else:
+            print(f"No se proporcionó un identificador de {self.__nombreColeccion} para la modificación.")
+
+    def eliminarOpcion(self):
+        if self.__idOpcion is not None:
+            db.collection(self.__nombreColeccion).document(self.__idOpcion).delete()
+        else:
+            print(f"No se proporcionó un identificador de {self.__nombreColeccion} para la eliminación.")
+    
+    def mostrarOpciones(self, nombreColeccion):
         opcionesRef = db.collection(nombreColeccion)
         listaOpciones = [{"id": doc.id, "descripcionOpcion": doc.to_dict()[f'descripcion{nombreColeccion.capitalize()}']} for doc in opcionesRef.stream()]
         return listaOpciones
-
-    def agregarOpcion(self, nombreColeccion, descripcionOpcion):
-        opcionesRef = db.collection(nombreColeccion)
-        opcionesRef.add({f'descripcion{nombreColeccion.capitalize()}':descripcionOpcion})
-
-    def modificarOpcion(self, nombreColeccion, idOpcion, descripcionNueva):
-        if idOpcion is not None:
-            db.collection(nombreColeccion).document(idOpcion).update({
-                f'descripcion{nombreColeccion.capitalize()}': descripcionNueva,
-            })
-        else:
-            print(f"No se proporcionó un identificador de {nombreColeccion} para la modificación.")
-
-    def eliminarOpcion(self, nombreColeccion, variableId):
-        if variableId is not None:
-            doc_ref = db.collection(nombreColeccion).document(variableId)
-            if doc_ref.get().exists:
-                doc_ref.delete()
-            else:
-                print(f"No se encontró el documento con el ID {variableId} en la colección {nombreColeccion}.")
-    
 
     def obtenerDescripcionesOpcion(self):
         descripciones = []  # Lista para almacenar las descripciones
@@ -57,6 +59,47 @@ class Opciones():
                     descripciones.append(f"{self.__nombreColeccion.capitalize()} no encontrado para ID: {id}")
         return descripciones
 
+    def listarOpciones(self, nombreColeccion, tipoOpcion, filtro):
+        descripciones = []  # Lista para almacenar las descripciones
+
+        # Realiza una consulta a la base de datos para obtener las opciones del tipo deseado
+        if tipoOpcion == "autor":
+            opciones_ref = db.collection(nombreColeccion)
+            opciones_query = opciones_ref.where("descripcionAutor", ">=", filtro).where("descripcionAutor", "<", filtro + u'\uf8ff')
+            opciones_docs = opciones_query.stream()
+            for opcion_doc in opciones_docs:
+                opcion = {
+                    "id": opcion_doc.id,  # ID de la opción
+                    "descripcion": opcion_doc.to_dict()["descripcionAutor"]  # Descripción de la opción
+                }
+                descripciones.append(opcion)
+        elif tipoOpcion == "genero":
+            opciones_ref = db.collection(nombreColeccion)
+            opciones_query = opciones_ref.where("descripcionGenero", ">=", filtro).where("descripcionGenero", "<", filtro + u'\uf8ff')
+            opciones_docs = opciones_query.stream()
+            for opcion_doc in opciones_docs:
+                opcion = {
+                    "id": opcion_doc.id,  # ID de la opción
+                    "descripcion": opcion_doc.to_dict()["descripcionGenero"]  # Descripción de la opción
+                }
+                descripciones.append(opcion)
+        elif tipoOpcion == "editorial":
+            opciones_ref = db.collection(nombreColeccion)
+            opciones_query = opciones_ref.where("descripcionEditorial", ">=", filtro).where("descripcionEditorial", "<", filtro + u'\uf8ff')
+            opciones_docs = opciones_query.stream()
+            for opcion_doc in opciones_docs:
+                opcion = {
+                    "id": opcion_doc.id,  # ID de la opción
+                    "descripcion": opcion_doc.to_dict()["descripcionEditorial"]  # Descripción de la opción
+                }
+                descripciones.append(opcion)
+        return descripciones
+    
+    def listarOpcionesGeneral(self, nombreColeccion):
+        opcionesRef = db.collection(nombreColeccion)
+        listaOpciones = [{"id": doc.id, "descripcionOpcion": doc.to_dict()[f'descripcion{nombreColeccion.capitalize()}']} for doc in opcionesRef.stream()]
+        return listaOpciones
+        
     def obtenerDescripcionOpcion(self, nombreColeccion=None, variableId=None):
         if variableId is not None:
                 opcion_ref = db.collection(nombreColeccion).document(variableId)
@@ -66,3 +109,24 @@ class Opciones():
                 else:
                     descripcion = (f"{nombreColeccion.capitalize()} no encontrado para ID: {variableId}")
         return descripcion
+    
+    def eliminarOpcionGeneral(self, nombreColeccion, variableId):
+        if variableId is not None:
+            doc_ref = db.collection(nombreColeccion).document(variableId)
+            if doc_ref.get().exists:
+                doc_ref.delete()
+            else:
+                print(f"No se encontró el documento con el ID {variableId} en la colección {nombreColeccion}.")
+
+    def modificarOpcionGeneral(self, nombreColeccion, idOpcion, descripcionNueva):
+        if idOpcion is not None:
+            db.collection(nombreColeccion).document(idOpcion).update({
+                f'descripcion{nombreColeccion.capitalize()}': descripcionNueva,
+            })
+        else:
+            print(f"No se proporcionó un identificador de {nombreColeccion} para la modificación.")
+    
+    def agregarOpcionGeneral(self, nombreColeccion, descripcionOpcion):
+        opcionesRef = db.collection(nombreColeccion)
+        opcionesRef.add({f'descripcion{nombreColeccion.capitalize()}':descripcionOpcion})
+

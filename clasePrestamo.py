@@ -1,7 +1,8 @@
 class Prestamo:
-    def __init__(self, lectorNombre, libroNombre, cantidad, fechaEntrega, fechaDevolucion, estado):
+    def __init__(self, lectorNombre, libroNombre, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado):
         self.__lectorNombre = lectorNombre
         self.__libroNombre = libroNombre
+        self.__idLibro = idLibro
         self.__cantidad = cantidad
         self.__fechaEntrega = fechaEntrega
         self.__fechaDevolucion = fechaDevolucion
@@ -19,11 +20,11 @@ class Prestamo:
     def setLibroNombre(self, libroNombre):
         self.__libroNombre = libroNombre
 
-    def getLibroAutor(self):
-        return self.__libroAutor
+    def getIdLibro(self):
+        return self.__idLibro
 
-    def setLibroAutor(self, libroAutor):
-        self.__libroAutor = libroAutor
+    def setIdLibro(self, idLibro):
+        self.__idLibro = idLibro
         
     def getLibroEditorial(self):
         return self.__libroEditorial
@@ -54,5 +55,4 @@ class Prestamo:
 
     def setEstado(self, estado):
         self.__estado = estado
-
 

@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+
+
+.group {
+    background-color: white; /* Fondo blanco para el contenedor */
+    padding: 10px;
+    border-radius: 10px; /* Bordes redondeados para el contenedor */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Prompt, sans-serif;
+}
+
+.left {
+    display: flex;
+}
+
+
+.left a {
+    text-decoration: none;
+    background-color: green; /* Botón de agregar en verde */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para el botón */
+    margin: 5px; /* Espacio entre los botones */
+    
+}
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead {
+    background-color: black; /* Fondo negro para el encabezado */
+    color: white; /* Texto blanco para el encabezado */
+}
+
+tbody {
+    background-color: white; /* Fondo blanco para el contenido */
+    color: black; /* Texto negro para el contenido */
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.eliminar {
+    text-decoration: none;
+    background-color: #f24539;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+
+
+.eliminar:hover {
+    background-color: #bb2b2b;
+  }
+  
+.modificar {
+    text-decoration: none;
+    background-color: #303030;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+.modificar:hover {
+    background-color: #000;
+  }
+
+a {
+    text-decoration: none;
+}
+.btn {
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px; /* Bordes redondeados para el botón */
+}
+
+input {
+    border: none;
+    border-radius: 100px;
+    padding: 10px 10px;
+    width: 60%; /* El ancho del input es igual al del contenedor */
+    margin: 10px 0; /* Añade espacio vertical entre los campos de entrada */
+    border-radius: 10px;
+    border: 2px solid var(--colors-grey, #EBEAED);
+    margin-right: 15px;
+}
+
+.right { 
+    display:flex;
+}

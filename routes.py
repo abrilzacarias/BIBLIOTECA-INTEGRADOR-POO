@@ -8,6 +8,7 @@ from subclaseBibliotecario import Bibliotecario
 from subclaseLector import Lector
 from claseLibro import Libro
 from claseOpciones import Opciones
+import datetime
 
 registroUsuario = Registro()
 validador = Validaciones()
@@ -105,112 +106,18 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/listarLibros')
-def listarLibros():  # Crea una instancia de la clase Libro
-    listaLibros = libro.listarLibros()
-  # Agrega esta línea para verificar la lista de libros
-    return render_template('libros/vistaLibros.html', libros=listaLibros)
-
-
-@app.route('/agregarLibro', methods=["GET", "POST"])
-def agregarLibro():
-    if request.method == 'POST':
-        # Obtén los datos de la solicitud JSON
-        isbn = request.form["isbn"]
-        titulo = request.form["titulo"]
-        portada = request.files["portada"]
-        idAutor = request.form.getlist('autor')  # Recibe una lista de IDs de autores
-        idEditorial = request.form.getlist('editorial')  
-        idGenero = request.form.getlist('genero') 
-        cantidad = request.form["cantidad"]
-        
-        # Convierte la lista de autores en una lista de diccionarios
-        print(f'Autores: {idAutor}')
-        print(f'NOMBRE EN ROUTES: {titulo}')
-        print(f'NOMBRE EN ROUTES: {idAutor} {idEditorial} {idGenero}')
-        nuevoLibro = Libro()
-        idLibro = nuevoLibro.agregarLibro(isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad)
- 
-        # Comprueba si se ha seleccionado al menos una opción para cada campo
-        if not idAutor or not idEditorial or not idGenero:
-            error='Debes seleccionar al menos una opción para Autor, Editorial y Género.'
-            return render_template("libros/agregarLibro.html", error_message = error)   
-        
-        if idLibro:
-            # El libro se agregó con éxito, redirige a la vista listarLibros
-            return redirect(url_for('listarLibros'))
-        else:
-            # Hubo un error al agregar el libro, muestra el mensaje de error
-            return "Error al agregar el libro"
-    else:
-        return render_template("libros/agregarLibro.html")
-
-@app.route('/eliminarLibro/<idLibro>', methods=['GET', 'POST'])
-def eliminarLibro(idLibro): 
-    libro.eliminarLibro(idLibro)
-    return redirect(url_for('listarLibros'))
-
-@app.route('/buscarPorAutor', methods=['POST'])
-def buscarPorAutor():
-    data = request.get_json()
-    descripcion = data['descripcion']
-    
-    # Instancia la clase Libro
-    libro = Libro()
-    
-    # Llama al método buscarPorAutor
-    resultados = libro.buscarPorAutor(descripcion)
-    
-    return jsonify(resultados)
-
-@app.route('/buscarPorEditorial', methods=['POST'])
-def buscarPorEditorial():
-    data = request.get_json()
-    descripcion = data['descripcion']
-    
-    # Instancia la clase Libro
-    libro = Libro()
-    
-    # Llama al método buscarPorEditorial
-    resultados = libro.buscarPorEditorial(descripcion)
-    
-    return jsonify(resultados)
-
-@app.route('/buscarPorGenero', methods=['POST'])
-def buscarPorGenero():
-    data = request.get_json()
-    descripcion = data['descripcion']
-    
-    # Instancia la clase Libro
-    libro = Libro()
-    
-    # Llama al método buscarPorGenero
-    resultados = libro.buscarPorGenero(descripcion)
-    
-    return jsonify(resultados)
-
-@app.route('/listarOpciones', methods=['POST'])
-def listarOpciones():
-    nombreColeccion = request.json['nombreColeccion']
-    #print(nombreColeccion) # Verificar el valor en la consola del servidor
-    
-    resultados = opciones.listarOpciones(nombreColeccion)
-    #print(resultados) # Verificar los resultados en la consola del servidor
-    
-    return jsonify(resultados)
-
 @app.route('/listarSeleccion', methods=['GET', 'POST'])
 #listarSeleccion depende de la eleccion de visualizar autor, editorial o genero. En caso de elegir alguno, se 
 #utiliza la misma plantilla html para listar cada uno de ellos, sin neecesidad de crear una plantilla individual para cada uno. 
 def listarSeleccion(): 
     nombreColeccion = request.args.get('nombreColeccion')
     if nombreColeccion:
-        variableLista = opciones.listarOpciones(nombreColeccion)
+        variableLista = opciones.listarOpcionesGeneral(nombreColeccion)
         return render_template('libros/listarColeccion.html', variableLista=variableLista, nombreColeccion=nombreColeccion)
     else:
         if request.method == 'POST':
             nombreColeccion = request.form['nombreColeccion']
-            variableLista = opciones.listarOpciones(nombreColeccion)
+            variableLista = opciones.listarOpcionesGeneral(nombreColeccion)
             
             return render_template('libros/listarColeccion.html', variableLista=variableLista, nombreColeccion=nombreColeccion)
         else:
@@ -218,20 +125,18 @@ def listarSeleccion():
 
 @app.route('/eliminarVariable/<nombreColeccion>/<variableId>', methods=['GET', 'POST'])
 def eliminarVariable(nombreColeccion, variableId): 
-    opciones.eliminarOpcion(nombreColeccion, variableId)
+    opciones.eliminarOpcionGeneral(nombreColeccion, variableId)
     return redirect(url_for('listarSeleccion', nombreColeccion=nombreColeccion))
 
 @app.route('/actualizarVariable/<nombreColeccion>/<variableId>', methods=['GET', 'POST'])
 def actualizarVariable(nombreColeccion, variableId): 
     seleccion = opciones.obtenerDescripcionOpcion(nombreColeccion, variableId)
-    print(seleccion)
-    print(request.method)
+
     if request.method == 'POST':
         descripcionNueva = request.form['descripcionNueva']
-        print(descripcionNueva)
-        print('hola')
+
         if seleccion:
-            opciones.modificarOpcion(nombreColeccion, variableId, descripcionNueva)
+            opciones.modificarOpcionGeneral(nombreColeccion, variableId, descripcionNueva)
             return redirect(url_for('listarSeleccion', nombreColeccion=nombreColeccion))
         else:
             error_message = 'No se ha podido modificar correctamente'
@@ -242,9 +147,9 @@ def actualizarVariable(nombreColeccion, variableId):
 def agregarVariable(nombreColeccion): 
     if request.method == 'POST':
         nuevoDoc = request.form['nuevoDoc']
-        print('hola')
+
         if nuevoDoc:
-            opciones.agregarOpcion(nombreColeccion, nuevoDoc)
+            opciones.agregarOpcionGeneral(nombreColeccion, nuevoDoc)
             return redirect(url_for('listarSeleccion', nombreColeccion=nombreColeccion))
         else:
             error_message = 'No se ha podido modificar correctamente'
@@ -318,38 +223,42 @@ def EliminarLector(lectorId):
 @app.route('/verPrestamos')
 def verPrestamos():
     prestamos = bibliotecario.mostrarPrestamos()
+    
     return render_template('prestamos/verPrestamos.html', prestamos=prestamos)
 
-@app.route('/cambiarEstadoPrestamo/<prestamoId>', methods=['POST'])
-def cambiarEstadoPrestamo(prestamoId):
+@app.route('/cambiarEstadoPrestamo/<prestamoId>/<idLibro>', methods=['POST'])
+def cambiarEstadoPrestamo(prestamoId, idLibro):
     try:
-        prestamosRef = db.collection("prestamos")
-        prestamo = prestamosRef.document(prestamoId)
-
-        if prestamo.get().exists:
-            prestamo.update({'estado': 'Devuelto'})
-            return redirect(url_for('verPrestamos'))
-        else:
-            return "Préstamo no encontrado."
+        bibliotecario.cambiarEstadoPrestamo(prestamoId, idLibro)
+        return redirect(url_for('verPrestamos'))
     except Exception as e:
         return f"Error al cambiar el estado del préstamo: {str(e)}"
+
 
 @app.route('/realizarPrestamo', methods=['GET', 'POST'])
 def realizarPrestamo():
     #libros = libro.listarLibros()
     lectores = bibliotecario.mostrarLectores()
-    
     if request.method == 'POST':
-        idLector = request.form['idLector']
+        dniLector = request.form['DNILector']
         idLibro = request.form['idLibro']
-        cantidad = request.form['cantidad']
-        fechaEntrega = request.form['fechaEntrega']
+        cantidad = int(request.form['cantidad'])  # Convertir la cantidad a entero
         fechaDevolucion = request.form['fechaDevolucion']
-        
         estado = "PRESTADO"
-        bibliotecario.realizarPrestamo(idLector, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado)
-        prestamos = bibliotecario.mostrarPrestamos()
-        return render_template('prestamos/verPrestamos.html', prestamos=prestamos)
+
+        fechaActual = validador.obtenerFechaActualStr()
+
+        if validador.validarFechaDevolucionPrestamo(fechaDevolucion) == False:
+            error = "La fecha de devolución no puede ser anterior a la fecha actual."
+            return render_template('prestamos/registroPrestamo.html', error=error, lectores=lectores)  
+        else:
+            prestamo = bibliotecario.realizarPrestamo(dniLector, idLibro, cantidad, fechaActual, fechaDevolucion, estado)
+            if prestamo == False:
+                error = "La cantidad de libros en stock no es suficiente para realizar el préstamo."
+                return render_template('prestamos/registroPrestamo.html', lectores=lectores, error=error)
+            else:
+                prestamos = bibliotecario.mostrarPrestamos()
+                return render_template('prestamos/verPrestamos.html', prestamos=prestamos)
     
     return render_template('prestamos/registroPrestamo.html', lectores=lectores)
     
@@ -363,5 +272,208 @@ def buscarPrestamos():
     # Combina las dos listas eliminando duplicados
     resultadosPrestamos = resultadoNombreLibro + resultadosNombreLector
 
-    print(resultadosPrestamos)
     return render_template('prestamos/verPrestamos.html', prestamos=resultadosPrestamos)
+
+@app.route('/listarLibros')
+def listarLibros():
+    libro = Libro()  # Crea una instancia de la clase Libro
+    listaLibros = libro.listarLibros()
+  # Agrega esta línea para verificar la lista de libros
+    return render_template('libros/vistaLibros.html', libros=listaLibros)
+
+@app.route('/agregarLibro', methods=["GET", "POST"])
+def agregarLibro():
+    if request.method == 'POST':
+        # Obtén los datos de la solicitud JSON
+        isbn = request.form["isbn"]
+        titulo = request.form["titulo"]
+        portada = request.files["portada"]
+        idAutor = request.form.getlist('autor')  # Recibe una lista de IDs de autores
+        idEditorial = request.form.getlist('editorial')  
+        idGenero = request.form.getlist('genero') 
+        cantidad = request.form["cantidad"]
+        
+        # Convierte la lista de autores en una lista de diccionarios
+        #print(f'Autores: {idAutor}')
+        #print(f'NOMBRE EN ROUTES: {titulo}')
+        #print(f'NOMBRE EN ROUTES: {idAutor} {idEditorial} {idGenero}')
+        nuevoLibro = Libro()
+        idLibro = nuevoLibro.agregarLibro(isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad)
+ 
+        # Comprueba si se ha seleccionado al menos una opción para cada campo
+        if not idAutor or not idEditorial or not idGenero:
+            error='Debes seleccionar al menos una opción para Autor, Editorial y Género.'
+            return render_template("libros/agregarLibro.html", error_message = error)   
+        
+        if idLibro:
+            # El libro se agregó con éxito, redirige a la vista listarLibros
+            return redirect(url_for('listarLibros'))
+        else:
+            # Hubo un error al agregar el libro, muestra el mensaje de error
+            return "Error al agregar el libro"
+    else:
+        return render_template("libros/agregarLibro.html")
+
+@app.route('/obtenerLibroPorId/<string:idLibro>', methods=['GET'])
+def obtenerLibroPorId(idLibro):
+    if idLibro is not None:
+        # Aquí puedes utilizar tu método obtenerLibroPorId para obtener los datos del libro
+        libro = Libro()  # Crea una instancia de la clase Libro
+        datosLibro = libro.obtenerLibroPorId(idLibro)
+
+        if datosLibro is not None:
+            # Obtén los IDs de autores, editoriales y géneros seleccionados en el libro
+            idAutoresSeleccionados = datosLibro.get('idAutoresSeleccionados', [])
+            idEditorialesSeleccionadas = datosLibro.get('idEditorialesSeleccionadas', [])
+            idGenerosSeleccionados = datosLibro.get('idGenerosSeleccionados', [])
+
+            #print(idAutoresSeleccionados)
+            
+            # Agrega estos IDs a los datos del libro
+            datosLibro['idAutoresSeleccionados'] = idAutoresSeleccionados
+            datosLibro['idEditorialesSeleccionadas'] = idEditorialesSeleccionadas
+            datosLibro['idGenerosSeleccionados'] = idGenerosSeleccionados
+
+            return jsonify(datosLibro)  # Devuelve los datos del libro con los IDs seleccionados como JSON
+        else:
+            return jsonify({'error': 'El libro no existe en la base de datos'}), 404
+    else:
+        return jsonify({'error': 'ID de libro no válido'}), 400
+
+
+@app.route('/actualizarLibro/<idLibro>', methods=['POST'])
+def actualizarLibro(idLibro):
+    try:
+        isbn = request.form['isbn']
+        titulo = request.form['titulo']
+        cantidad = request.form['cantidad']
+        
+        autores = request.form.getlist('autor[]')
+        editoriales = request.form.getlist('editorial[]')
+        generos = request.form.getlist('genero[]')
+
+        
+        portada_file = request.files.get('portadaFile')
+
+        print(f'ISBN: {isbn}')
+        print(f'Título: {titulo}')
+        print(f'Cantidad: {cantidad}')
+        print(f'Autores: {autores}')
+        print(f'Editoriales: {editoriales}')
+        print(f'Géneros: {generos}')
+
+        if portada_file:
+            print(f'Portada (FileStorage): {portada_file.filename}')
+        else:
+            print('No se proporcionó una nueva portada')
+
+        libro = Libro()
+
+        # Llama al método actualizarLibro con los argumentos apropiados
+        libro.actualizarLibro(idLibro, isbn, titulo, portada_file, autores, editoriales, generos, cantidad)
+
+        return jsonify({'message': 'Libro actualizado con éxito'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
+@app.route('/eliminarLibro/<idLibro>', methods=['GET', 'POST'])
+def eliminarLibro(idLibro): 
+    libro= Libro()
+    #print(idLibro)
+    libro.eliminarLibro(idLibro)
+    return redirect(url_for('listarLibros'))
+
+@app.route('/listarOpciones', methods=['POST'])
+def listarOpciones():
+    nombreColeccion = request.json['nombreColeccion']
+    tipoOpcion = request.json['tipoOpcion']  # Tipo de opción a listar (por ejemplo, "autor", "genero" o "editorial")
+    filtro = request.json['filtro']  # Filtro de búsqueda (por ejemplo, "a" para autores que comienzan con "a")
+    
+    print(nombreColeccion)
+    print(tipoOpcion)
+    print(filtro)
+    opciones = Opciones()
+
+    resultados = opciones.listarOpciones(nombreColeccion, tipoOpcion, filtro)
+    print(resultados)
+    
+    return jsonify(resultados)
+
+@app.route('/mostrarOpciones', methods=['POST'])
+def mostrarOpciones():
+    nombreColeccion = request.json['nombreColeccion']
+    #print(nombreColeccion) # Verificar el valor en la consola del servidor
+    
+    opciones = Opciones()
+    resultados = opciones.mostrarOpciones(nombreColeccion)
+    #print(resultados) # Verificar los resultados en la consola del servidor
+    
+    return jsonify(resultados)
+
+@app.route('/buscarPorAutor', methods=['POST'])
+def buscarPorAutor():
+    data = request.get_json()
+    descripcion = data['descripcion']
+    
+    # Instancia la clase Libro
+    libro = Libro()
+    
+    # Llama al método buscarPorAutor
+    resultados = libro.buscarPorAutor(descripcion)
+    
+    return jsonify({"resultados": resultados})
+
+@app.route('/buscarPorEditorial', methods=['POST'])
+def buscarPorEditorial():
+    data = request.get_json()
+    descripcion = data['descripcion']
+    
+    # Instancia la clase Libro
+    libro = Libro()
+    
+    # Llama al método buscarPorEditorial
+    resultados = libro.buscarPorEditorial(descripcion)
+    
+    return jsonify({"resultados": resultados})
+
+@app.route('/buscarPorGenero', methods=['POST'])
+def buscarPorGenero():
+    data = request.get_json()
+    descripcion = data['descripcion']
+    # Instancia la clase Libro
+    libro = Libro()
+    # Llama al método buscarPorGenero
+    resultados = libro.buscarPorGenero(descripcion)
+    
+    return jsonify({"resultados": resultados})
+
+
+@app.route('/buscarPorTitulo', methods=['POST'])
+def buscarPorTitulo():
+    data = request.get_json()
+    titulo = data['titulo']
+    
+    # Instancia la clase Libro
+    libro = Libro()
+    
+    # Llama al método buscarPorTitulo en la instancia de Libro
+    resultados = libro.buscarPorTitulo(titulo)
+    
+    return jsonify({"resultados": resultados})
+
+#Ruta encargada de gestionar la busqueda de lectores por nombre o DNI
+@app.route('/buscarLectores', methods=['POST'])
+def buscarLectores():
+    #Se hace un request para obtener el valor que se desea buscar
+    nombreLectorDni = request.form['buscarNombreLectorDni']
+    #se recuperan las busquedas a través de métodos de bibliotecario
+    resultadoLectorNombre = bibliotecario.buscarLectoresPorNombre(nombreLectorDni)
+    resultadosLectorDni = bibliotecario.buscarLectoresPorDni(nombreLectorDni)
+    resultadosLectorApellido = bibliotecario.buscarLectoresPorApellido(nombreLectorDni)
+    #se combinan las dos listas retornadas
+    resultadosLectores = resultadoLectorNombre + resultadosLectorDni + resultadosLectorApellido
+    #se renderiza la vista con los resultados
+    return render_template('lectores/verLectores.html', lectores=resultadosLectores)
+

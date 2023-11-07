@@ -1,54 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head> 
-    <link rel="stylesheet" href="/static/css/verlectors.css">
-    <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
-  </head>
-  
-</body>
-  {% include 'navbar.html' %}
-  <div class="container">
-    <a href="{{ url_for('agregarLector') }}">
-      <button class="btn agregar">Agregar Lector</button>
-    </a>
-    
-   
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>DNI</th>
-                    <th>Email</th>
-                    <th>Domicilio</th>
-                    <th>Telefono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for lector in lectores %}
-                    <tr>
-                        <td>{{ lector.nombre }}</td>
-                        <td>{{ lector.apellido }}</td>
-                        <td>{{ lector.dni }}</td>
-                        <td>{{ lector.email }}</td>
-                        <td>{{ lector.domicilio}}</td>
-                        <td>{{ lector.telefono }}</td>
-                        <td>
-                            <a href="{{ url_for('EliminarLector', lectorId=lector.id)}}"
-                          onclick="return confirm('¿Está seguro de que desea eliminar este cliente?');">
-                                <button class="btn eliminar"><i class="fa-solid fa-trash"></i></button>
-                            </a>
-            
-                            <a href="{{ url_for('ActualizarLector', lectorId=lector.id)}}">
-                                <button class="btn modificar"><i class="fa-solid fa-pencil"></i></button>
-                            </a>
-                        </td>
-                        
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+{% extends 'navbar.html' %}
+{% block content %}
+    <head>
+        <link rel="stylesheet" href="/static/css/verLectores.css">
+        <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
+    </head>
+
+    <div class="group">
+        <div class="left">
+            <a href="{{ url_for('agregarLector') }}">AGREGAR LECTOR</a>
+        </div>
+        <form action="{{ url_for('buscarLectores') }}" method="POST" class="form-inline mt-3">
+            <div class="right">
+                <input type="text" name="buscarNombreLectorDni" class="form-control" placeholder="Nombre, apellido o DNI del lector">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </form>
     </div>
-</html>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Domicilio</th>
+                <th>Telefono</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lector in lectores %}
+            <tr>
+                <td>{{ lector.nombre }}</td>
+                <td>{{ lector.apellido }}</td>
+                <td>{{ lector.dni }}</td>
+                <td>{{ lector.email }}</td>
+                <td>{{ lector.domicilio }}</td>
+                <td>{{ lector.telefono }}</td>
+                <td class="btn">
+                    <a href="{{ url_for('EliminarLector', lectorId=lector.id) }}" onclick="return confirm('¿Está seguro de que desea eliminar este cliente?');">
+                    <button class="btn eliminar"><i class="fa-solid fa-trash"></i></button>
+                    </a>
+                    <a href="{{ url_for('ActualizarLector', lectorId=lector.id) }}">
+                    <button class="btn modificar"><i class="fa-solid fa-pencil"></i></button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

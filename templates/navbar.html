@@ -3,17 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="icon" href="{{ url_for('static', filename='css/img/logoNavegador.svg') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}" />
 </head>
 <body>
-    <ul class="navbar">
-        <li><a href="/vistaBibliotecario">Libros</a></li>
-        <li><a href="/verLectores">Lectores</a></li>
-        <li><a href="/verPrestamos">Transacciones</a></li>
-        <li><a href="/logout"
-            onclick="return confirm('¿Está seguro de que desea cerrar sesion?');">Cerrar Sesion</li>
+    <div class="navbar">
+        <div class="menuOpcion">
+            <a href="/listarLibros">Libros</a>
+        </div>
+        <div class="menuOpcion">
+            <a href="/verLectores">Lectores</a>
+        </div>
+        <div class="menuOpcion">
+            <a href="/verPrestamos">Transacciones</a>
+        </div>
+        <div class="navbar">
+            <a href="/logout"
+            onclick="return confirm('¿Está seguro de que desea cerrar sesion?');">Cerrar Sesion</a>
+        </div>    
+    </div>
+
+    <main>
+        {% block content %}
         
-    </ul>
+        {% endblock %}
+    </main>
     
 </body>
 </html>

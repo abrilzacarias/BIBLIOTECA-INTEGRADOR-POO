@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+/* Estilos para la barra de navegación */
+body {
+    margin: 0;
+    font-family: Prompt, sans-serif;
+}
+.navbar {
+    background-color: black;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* Estilos para las opciones del menú */
+.menuOpcion {
+    flex: 1;
+    text-align: center;
+}
+
+.menuOpcion a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+/* Estilos para el botón de Cerrar Sesión */
+.navbar a[href="/logout"] {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    margin-left: auto;
+}

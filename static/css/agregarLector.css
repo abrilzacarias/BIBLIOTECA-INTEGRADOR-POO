@@ -24,29 +24,12 @@ h1 {
 .container {
     background-color: white; /* Fondo blanco del contenedor */
     border-radius: 50px; /* Radio de borde de 100 */
-    margin: 25px; /* Margen externo para separar el contenedor del borde de la página */
+    margin: 40px; /* Margen externo para separar el contenedor del borde de la página */
     background-color: white;
     text-align: center;
     width: 60%; /* Limita el ancho del contenedor */
 }
 
-.google-button {
-    color: black;
-    text-decoration: none;
-    border-radius: 100px;
-    margin: 10px;
-    border: 1px solid black;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 10px;
-}
-
-.google-icon {
-    width: 40px; /* Tamaño del ícono, ajusta según tus necesidades */
-    height: 40px;
-    margin-right: 10px;
-}
 
 .group {
     font-weight: bold;
@@ -64,18 +47,19 @@ input {
     border: 2px solid var(--colors-grey, #EBEAED);
 }
 
-.boton-registrar {
+.boton-agregar {
     height: 50px;
     font-size: 16px;
-    margin: 30px 40px;
+    margin: 30px 300px;
     padding: 10px 20px;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     text-decoration: none;
     border-radius: 100px;
     cursor: pointer;
+    
 } 
-.boton-registrar:hover{
+.boton-agregar:hover{
     background-color: rgb(29, 29, 29)
 }
 

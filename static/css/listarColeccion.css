@@ -1,0 +1,75 @@
+thead {
+    background-color: black; /* Fondo negro para el encabezado */
+    color: white; /* Texto blanco para el encabezado */
+}
+
+tbody {
+    background-color: white; /* Fondo blanco para el contenido */
+    color: black; /* Texto negro para el contenido */
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+
+.eliminar {
+    text-decoration: none;
+    background-color: #f24539;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 15px;
+  }
+
+
+.eliminar:hover {
+    background-color: #bb2b2b;
+  }
+  
+.modificar {
+    text-decoration: none;
+    background-color: #303030;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+.modificar:hover {
+    background-color: #000;
+  }
+
+a {
+    text-decoration: none;
+}
+.btn {
+    
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+}
+
+.left button {
+    background-color: black; /* Botones negros */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno de los botones */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para los botones */
+    margin: 5px; /* Espacio entre los botones */
+    cursor:pointer;
+    font-family: Prompt, sans-serif;
+}
+
+.left button:hover {
+    background-color: #333; /* Cambia el color de fondo al pasar el cursor */
+}
