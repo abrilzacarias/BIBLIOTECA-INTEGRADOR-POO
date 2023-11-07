@@ -73,17 +73,15 @@ class Libro():
 
             # Obtener descripciones de autores
             autorDescripciones = [Autor(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idAutores]
+            autorDescripciones = "\n".join(autorDescripciones) if autorDescripciones else "SIN AUTOR"
 
             # Obtener descripciones de géneros
             generoDescripciones = [Genero(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idGeneros]
+            generoDescripciones = "\n".join(generoDescripciones) if generoDescripciones else "SIN GÉNERO"
 
             # Obtener descripciones de editoriales
             editorialDescripciones = [Editorial(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idEditoriales]
-
-            # Unir las descripciones en una sola cadena separada por comas
-            autorDescripciones = "\n".join(autorDescripciones)
-            generoDescripciones = "\n".join(generoDescripciones)
-            editorialDescripciones = "\n".join(editorialDescripciones)
+            editorialDescripciones = "\n".join(editorialDescripciones) if editorialDescripciones else "SIN EDITORIAL"
 
             datosLibros['idLibro'] = libro.id
             datosLibros['titulo'] = titulo
@@ -97,6 +95,7 @@ class Libro():
             listaLibros.append(datosLibros)
 
         return listaLibros
+
 
     
     def generar_url_firmada(self, nombre_archivo, bucket_name):

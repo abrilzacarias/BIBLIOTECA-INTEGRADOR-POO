@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+
+body {
+    margin: 0;
+    background-color: black;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26px;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+h2 {
+    font-family: 'Prompt', sans-serif;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.container {
+    background-color: white;
+    border-radius: 50px;
+    margin: 40px;
+    margin-left: 210px;
+    text-align: center;
+    width: 35%;
+}
+
+.container-formulario{
+    background-color: white;
+    border-radius: 50px;
+    margin: 30px;
+    margin-left: -50px;
+    margin-right: 80px;
+    text-align: center;
+    width: 330%;
+}
+
+input {
+    border: none;
+    border-radius: 100px;
+    padding: 10px;
+    width: 90%; /* Ancho del 100% para ocupar todo el contenedor */
+    margin: 10px 0; /* Aumenta el espacio vertical entre los campos de entrada */
+    border: 2px solid var(--colors-grey, #EBEAED);
+}
+
+
+.boton-registrar {
+    height: 50px;
+    font-size: 16px;
+    margin: 30px 40px;
+    padding: 10px 20px;
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+.boton-registrar:hover {
+    background-color: rgb(29, 29, 29);
+}
+
+.campo-agrupado {
+    display: flex;
+    justify-content: space-between;
+}

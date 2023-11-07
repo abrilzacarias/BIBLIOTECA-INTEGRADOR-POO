@@ -3,64 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de Libros</title>
+    <title>Vista de Libros</title>
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/registroPrestamo.css">
+    <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/listaLibros.css') }}" />
 </head>
 <body>
-    <div class="container">
-    <br>
-    <div class="row">
-        <div class="col">
-            <a href="{{ url_for('agregarLibro') }}" class="btn btn-success">AGREGAR NUEVO LIBRO</a>
+    <div class="group">
+        <div class="left">
+            <a href="{{ url_for('agregarLibro') }}">AGREGAR LIBRO</a>
+            <form method="POST" action="{{ url_for('listarSeleccion') }}">
+                <button type="submit" name="nombreColeccion" value="autor">Visualizar Autores</button>
+                <button type="submit" name="nombreColeccion" value="editorial">Visualizar Editoriales</button>
+                <button type="submit" name="nombreColeccion" value="genero">Visualizar Generos</button>
+            </form>
         </div>
-        <div class="col">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="buscar-libro-input" placeholder="Buscar libro por título, autor, género, editorial....">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" id="buscar-libro-btn">BUSCAR</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="w-100">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Título</th>
-                        <th>Portada</th>
-                        <th>ISBN</th>
-                        <th>Autor</th>
-                        <th>Género</th>
-                        <th>Editorial</th>
-                        <th>Cantidad</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-resultados">
-                    {% for libro in libros %}
-                    <tr>
-                        <td>{{ libro['titulo'] }}</td>
-                        <td><img src="{{ libro['portada'] }}"></td>
-                        <td>{{ libro['isbn'] }}</td>
-                        <td>{{ libro['autor'] }}</td>
-                        <td>{{ libro['genero'] }}</td>
-                        <td>{{ libro['editorial'] }}</td>
-                        <td>{{ libro['cantidad'] }}</td>
-                        <td>
-                            <!-- Agrega botones u opciones de acciones aquí -->
-                            <!-- Agregar este atributo data-id para identificar el libro que se va a editar -->
-                            <button class="btn btn-primary editar-libro" data-toggle="modal" data-target="#modal-editar-libro" data-id="{{ libro['idLibro'] }}">Editar</button>
-                            <button class="btn btn-danger borrar-libro-btn" data-id="{{ libro['idLibro'] }}">BORRAR</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="right">
+            <form action="">
+                <input type="text" class="buscarInput" id="buscar-libro-input" placeholder="Buscar libro por título, autor, género, editorial....">
+                <button class="buscar" id="buscar-libro-btn">Buscar</button>
+            </form>
         </div>
     </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Portada</th>
+                <th>ISBN</th>
+                <th>Autor</th>
+                <th>Género</th>
+                <th>Editorial</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-resultados">
+            {% for libro in libros %}
+            <tr>
+                <td>{{ libro['titulo'] }}</td>
+                <td><img src="{{ libro['portada'] }}"></td>
+                <td>{{ libro['isbn'] }}</td>
+                <td class="descripciones">{{ libro['autor'] }}</td>
+                <td class="descripciones">{{ libro['genero'] }}</td>
+                <td class="descripciones">{{ libro['editorial'] }}</td>                
+                <td>{{ libro['cantidad'] }}</td>
+                <td>
+                    <!-- Agrega botones u opciones de acciones aquí -->
+                    <!-- Agregar este atributo data-id para identificar el libro que se va a editar -->
+                    <button class="btn btn-modificar editar-libro" data-toggle="modal" data-target="#modal-editar-libro" data-id="{{ libro['idLibro'] }}"><i class="fa-solid fa-pencil"></i></button>
+                    <button class="btn btn-eliminar borrar-libro-btn" data-id="{{ libro['idLibro'] }}"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
         <!-- Modal para editar un libro existente -->
         <div class="modal fade" id="modal-editar-libro" tabindex="-1" role="dialog" aria-labelledby="modal-editar-libro-label" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -140,5 +138,4 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <script src="../static/js/opciones.js"></script>
-</body>
 {% endblock %}
