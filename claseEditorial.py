@@ -1,8 +1,11 @@
 class Editorial():
+    #Constructor de la clase editorial, inicializa los atributos del mismo.  
+    #Cada vez que se añade una nueva editorial al sistema se crea una clase de la misma. 
     def __init__(self, idEditorial, descripcionEditorial):
         self.__idEditorial = None
         self.__descripcionEditorial = descripcionEditorial
 
+    #ENCAPSULAMIENTO Y ABSTRACCIÓN
     def getIdEditorial(self):
         return self.__idEditorial
     
@@ -15,6 +18,6 @@ class Editorial():
     def setDescripcionEditorial(self, descripcionEditorial):
         self.__descripcionEditorial = descripcionEditorial
          
-    #POLIMORFISMO: 
+    #POLIMORFISMO: se aplica el polimorfismo al haber métodos con nombres iguales pero con distinto comportamiento.
     def __obtenerDatos(self):
         return self.getDescripcionEditorial()

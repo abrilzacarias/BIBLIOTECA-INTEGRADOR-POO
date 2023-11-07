@@ -9,6 +9,9 @@
 <body>
     <div class="navbar">
         <div class="menuOpcion">
+            <img class="img" src="{{ url_for('static', filename='css/img/navbarLogo.svg') }}">
+        </div>
+        <div class="menuOpcion">
             <a href="/listarLibros">Libros</a>
         </div>
         <div class="menuOpcion">
@@ -17,10 +20,9 @@
         <div class="menuOpcion">
             <a href="/verPrestamos">Transacciones</a>
         </div>
-        <div class="navbar">
-            <a href="/logout"
-            onclick="return confirm('¿Está seguro de que desea cerrar sesion?');">Cerrar Sesion</a>
-        </div>    
+        <div class="menuOpcion">
+            <a href="/logout" onclick="return confirm('¿Está seguro de que desea cerrar sesión?');">Cerrar Sesión</a>
+        </div>
     </div>
 
     <main>

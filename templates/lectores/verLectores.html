@@ -1,7 +1,8 @@
 {% extends 'navbar.html' %}
 {% block content %}
     <head>
-        <link rel="stylesheet" href="/static/css/verLectores.css">
+        <title>LISTADO DE LECTORES</title>
+        <link rel="stylesheet" href="/static/css/lectores/verLectores.css">
         <script src="https://kit.fontawesome.com/05c2be17c9.js" crossorigin="anonymous"></script>
     </head>
 
@@ -11,8 +12,8 @@
         </div>
         <form action="{{ url_for('buscarLectores') }}" method="POST" class="form-inline mt-3">
             <div class="right">
-                <input type="text" name="buscarNombreLectorDni" class="form-control" placeholder="Nombre, apellido o DNI del lector">
-                <button type="submit" class="btn btn-primary">Buscar</button>
+                <input type="text" name="buscarNombreLectorDni" class="buscarInput" placeholder="Nombre, apellido o DNI del lector">
+                <button type="submit" class="buscar">Buscar</button>
             </div>
         </form>
     </div>

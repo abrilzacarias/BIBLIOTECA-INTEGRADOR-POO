@@ -2,6 +2,8 @@ from claseOpciones import Opciones
 from config import db
 
 class Autor(Opciones):
+    #Constructor de la clase autor, inicializa los atributos del mismo.  
+    #Cada vez que se añade un nuevo autor al sistema se crea una clase de la misma. 
     def __init__(self, idOpcion=None, descripcionOpcion=None):
         super().__init__(idOpcion, descripcionOpcion, "autor")
         

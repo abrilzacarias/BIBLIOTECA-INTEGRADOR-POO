@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,500&family=Prompt:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt&display=swap');
+
+.container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Prompt, sans-serif;
+}
+
+.container a {
+    text-decoration: none;
+    background-color: green;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.container button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-family: Prompt, sans-serif;
+}
+
+.container button:hover {
+    background-color: #333;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.form-group {
+    margin-right: 20px;
+}
+
+.form-control {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.btn-primary {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #333;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead {
+    background-color: black;
+    color: white;
+}
+
+tbody {
+    background-color: white;
+    color: black;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.btn-eliminar {
+    background-color: #f24539;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin-left: 70px;
+    margin-top: -37px;
+}
+
+.btn-eliminar:hover {
+    background-color: #bb2b2b;
+}
+
+.btn-modificar {
+    background-color: goldenrod;
+    border: none;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-modificar:hover {
+    background-color: #FFFF00;
+}
+
+.btn {
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    background-color: green;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.descripciones {
+    white-space: pre-line;
+}
+
+.custom-control-input[type="checkbox"] ~ .custom-control-label::before {
+    background-color: green; 
+    /* ... */
+}

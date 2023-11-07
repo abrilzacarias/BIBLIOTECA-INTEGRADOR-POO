@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/libros/actualizarVariable.css">
     <title>Modificar {{ nombreColeccion }}</title>
 </head>
 <body>
@@ -10,12 +11,12 @@
         <h2>Modificar {{ nombreColeccion }}</h2>
         <form method="POST" action="{{ url_for('actualizarVariable', nombreColeccion=nombreColeccion, variableId=variableId) }}" class="form">
 
-            <div class="form-group">
+            <div class="group">
                 <label for="descripcionNueva">Actualizar {{ nombreColeccion }}:</label>
                 <input type="text" class="formulario" id="descripcionNueva" name="descripcionNueva" value="{{ descripcionActual }}" required>
             </div>
             
-            <button type="submit" class="btn agregar">Guardar Cambios</button>
+            <button type="submit" class="boton-agregar">Guardar Cambios</button>
         </form>
         {% if error_message %}
             <p>{{ error_message }}</p>

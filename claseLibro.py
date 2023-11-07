@@ -1,8 +1,11 @@
+#se importan los módulos necesarios
 from subClaseAutor import Autor
 from subClaseEditorial import Editorial
 from subClaseGenero import Genero
 from config import db, bucket
 from google.cloud import storage
+#se crea el objeto que representa la conexión al servicio de almacenamiento de Firebase. 
+#Firebase Storage permite cargar, descargar o administrar archivos en la nube. 
 storage_client = storage.Client()
 
 class Libro(): 

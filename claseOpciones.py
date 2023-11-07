@@ -1,5 +1,5 @@
 from config import db
-
+#Clase base o clase padre de Autor, Editorial y Género.
 class Opciones():
     def __init__(self, idOpcion=None, descripcionOpcion=None, nombreColeccion=None):
         self.__idOpcion = idOpcion

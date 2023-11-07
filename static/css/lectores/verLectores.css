@@ -94,17 +94,22 @@ a {
     border-radius: 10px; /* Bordes redondeados para el botón */
 }
 
-input {
-    border: none;
-    border-radius: 100px;
-    padding: 10px 10px;
-    width: 60%; /* El ancho del input es igual al del contenedor */
-    margin: 10px 0; /* Añade espacio vertical entre los campos de entrada */
+
+
+.buscarInput {
+    padding: 10px;
+    border: 1px solid black;
     border-radius: 10px;
-    border: 2px solid var(--colors-grey, #EBEAED);
-    margin-right: 15px;
 }
 
-.right { 
-    display:flex;
+.buscar {
+    background-color: black; /* Botón de búsqueda en negro */
+    color: white; /* Texto blanco */
+    padding: 10px 20px; /* Espaciado interno del botón */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados para el botón */
+}
+
+.buscar:hover {
+    background-color: #333; /* Cambia el color de fondo al pasar el cursor */
 }
