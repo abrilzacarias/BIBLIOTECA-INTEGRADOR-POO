@@ -1,15 +1,20 @@
+#se importan los módulos necesarios para el registro. 
 from firebase_admin import auth
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+#La clase Registro cuenta con los métodos o las acciones que son llevadas a cabo al momento de registrarse. 
 class Registro:
     def __init__(self):
         self.apikey = 'AIzaSyA6v-toj9qDZnDf6agwprWam2uc8JFElVw'
         pass
 
+    #Al momento de ingresar manualmente el correo electrónico se envía un email al mismo para que el usuario pueda verificar que se ha registrado en la biblioteca. 
     def __verificarEmail(self, user):
         try:
+            #con SMTP se envía el mail de verificación
+            #posteriormente cuando el usuario quiera iniciar sesión primero debe verificar su mail.
             linkVerificacion = auth.generate_email_verification_link(user.email)
             smtpServer = "smtp.gmail.com"
             smtpUsername = "bibliotecapizarnik@gmail.com"
@@ -34,17 +39,19 @@ class Registro:
         except Exception as e:
             return ("Error al enviar el correo:", e)
     
+    #se obtiene el método privado de verificarEmail
     def getVerificarEmail(self, email):
         return self.__verificarEmail(email)
     
+    #registra al usuario con su email y su contraseña 
     def registrarUsuario(self, email, password):
         try:
             user = auth.create_user(
                 email=email,
                 password=password,
-                email_verified=False  # Asegúrate de que el correo no esté verificado al crear el usuario.
+                email_verified=False  #al crear el usuario el correo no debe estar verificado en un principio. 
             )
-
+        
             resultadoVerificacion = self.getVerificarEmail(user)
 
             return resultadoVerificacion

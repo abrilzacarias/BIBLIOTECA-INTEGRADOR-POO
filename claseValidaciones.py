@@ -103,4 +103,19 @@ class Validaciones:
     def convertirFechaAFormatoFecha(self, fecha):
         fechaDevolucion = datetime.datetime.strptime(fecha, '%Y-%m-%d').date()
         return fechaDevolucion
+    
+    
+    def validarIsbn(self, isbn):
+        # Elimina cualquier espacio en blanco o guiones del ISBN
+        isbn = isbn.replace(" ", "").replace("-", "")
 
+        # Comprueba si el ISBN tiene 13 dígitos
+        if not isbn.isdigit() or len(isbn) != 13:
+            return "El ISBN debe tener exactamente 13 dígitos."
+
+        return ''  # ISBN válido
+    
+    def convertirTitulo(self,titulo):
+        palabras = titulo.split()
+        palabras_capitalizadas = [palabra.capitalize() for palabra in palabras]
+        return " ".join(palabras_capitalizadas)

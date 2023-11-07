@@ -136,3 +136,11 @@ th, td {
     background-color: green; 
     /* ... */
 }
+
+.buscarInput {
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 450px;
+}
+

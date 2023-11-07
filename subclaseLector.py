@@ -1,6 +1,7 @@
 from clasePersona import Persona
 from firebase_admin import db
 
+#Lector hereda los atributos de la clase Persona. 
 class Lector(Persona):
     def __init__(self, nombre, apellido, dni, domicilio, telefono, email):
         super().__init__(nombre, apellido, dni, domicilio, telefono, email)

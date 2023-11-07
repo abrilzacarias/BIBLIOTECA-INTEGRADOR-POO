@@ -1,14 +1,14 @@
-#se importan los módulos necesarios
-from subClaseAutor import Autor
-from subClaseEditorial import Editorial
-from subClaseGenero import Genero
-from config import db, bucket
-from google.cloud import storage
-#se crea el objeto que representa la conexión al servicio de almacenamiento de Firebase. 
-#Firebase Storage permite cargar, descargar o administrar archivos en la nube. 
-storage_client = storage.Client()
+from subClaseAutor import Autor # Importar la clase 'Autor' desde el módulo 'subClaseAutor'
+from subClaseEditorial import Editorial # Importar la clase 'Editorial' desde el módulo 'subClaseEditorial'
+from subClaseGenero import Genero # Importar la clase 'Genero' desde el módulo 'subClaseGenero'
+from config import db, bucket # Importar los objetos 'db' y 'bucket' desde el módulo 'config'
+from google.cloud import storage  # Importar la clase 'Client' desde el módulo 'storage' de la biblioteca 'google.cloud'
+
+
+storageCliente = storage.Client()  # Crear una instancia del cliente de almacenamiento de Google Cloud
 
 class Libro(): 
+    # Constructor de la clase 'Libro' con parámetros opcionales
     def __init__(self, idLibro=None, isbn=None, titulo=None, portada=None, idAutor=None, idEditorial=None, idGenero=None, cantidad=None):
         self.__idLibro = idLibro
         self.__isbn = isbn
@@ -19,7 +19,8 @@ class Libro():
         self.__idGenero = idGenero  
         self.__cantidad = cantidad
         
-    #Setters y getters para acceder y modificar los atributos del cliente
+    #ENCAPSULAMIENTO Y ABSTRACCIÓN
+    #Setters y getters para acceder y modificar los atributos del libro
     def getIdLibro(self):
         return self.__idLibro
 
@@ -50,7 +51,8 @@ class Libro():
     def setCantidad(self, cantidad):
         self.__cantidad = cantidad
         
-    # Método privado que devuelve los datos del libro, incluyendo información adicional sobre el libro.
+    # Método privado que devuelve los datos del libro
+    #POLIMORFISMO
     def __obtenerDatos(self):
         return f'''Titulo: {self.getTitulo()} 
         Autor: {self.getAutor().getDescripcionAutor()}
@@ -59,10 +61,13 @@ class Libro():
         ISBN: {self.getIsbn()}
         Cantidad: {self.getCantidad()}'''
 
+    # Método público para listar libros
     def listarLibros(self):
+        # Obtener una referencia a la colección 'libros' en la base de datos
         librosRef = db.collection("libros")
         listaLibros = []
-
+        
+        # Extraer información específica del libro, como ISBN, título, portada y cantidad
         for libro in librosRef.stream():
             datosLibros = libro.to_dict()
             isbn = datosLibros.get('isbn')
@@ -74,18 +79,19 @@ class Libro():
             idGeneros = datosLibros.get('idGenero', [])
             idEditoriales = datosLibros.get('idEditorial', [])
 
-            # Obtener descripciones de autores
+            # Obtener descripciones de autores, como es una lista recorre y si no encuentra ningun valor devuelve "SIN AUTOR"
             autorDescripciones = [Autor(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idAutores]
             autorDescripciones = "\n".join(autorDescripciones) if autorDescripciones else "SIN AUTOR"
 
-            # Obtener descripciones de géneros
+            # Obtener descripciones de géneros, como es una lista recorre ysi no encuentra ningun valor devuelve "SIN GENERO"
             generoDescripciones = [Genero(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idGeneros]
             generoDescripciones = "\n".join(generoDescripciones) if generoDescripciones else "SIN GÉNERO"
 
-            # Obtener descripciones de editoriales
+            # Obtener descripciones de editoriales como es una lista recorre ysi no encuentra ningun valor devuelve "SIN EDITORIAL"
             editorialDescripciones = [Editorial(idOpcion=[id]).obtenerDescripcionesOpcion()[0] for id in idEditoriales]
             editorialDescripciones = "\n".join(editorialDescripciones) if editorialDescripciones else "SIN EDITORIAL"
 
+            # Actualizar el diccionario de datos del libro con la información adicional
             datosLibros['idLibro'] = libro.id
             datosLibros['titulo'] = titulo
             datosLibros['isbn'] = isbn
@@ -95,39 +101,38 @@ class Libro():
             datosLibros['genero'] = generoDescripciones
             datosLibros['cantidad'] = cantidad
 
+            # Agregar el diccionario de datos del libro a la lista de libros
             listaLibros.append(datosLibros)
-
+        # Devolver la lista de libros con información detallada
         return listaLibros
-
-
     
-    def generar_url_firmada(self, nombre_archivo, bucket_name):
-        # Obtener un objeto Blob que representa tu archivo en Firebase Storage
-        bucket = storage_client.get_bucket(bucket_name)
-        blob = bucket.blob(nombre_archivo)
+    # Método público para generar la url de la imagen que se almacena en Storage
+    def generarUrlFirmada(self, nombreArchivo, bucketName):
+        # Obtener un objeto Blob que representa el archivo en Firebase Storage
+        bucket = storageCliente.get_bucket(bucketName)
+        blob = bucket.blob(nombreArchivo)
 
-        # Generar una URL firmada válida (con la firma en base64)
-        signed_url = blob.generate_signed_url(
-                    version="v4",
-                    expiration=604800 ,  # 1 hora en segundos
-                    method="GET"
+        # Crear una URL firmada para acceso de lectura a un recurso en Google Cloud Storage
+        signedUrl = blob.generate_signed_url(
+                    version="v4",  # Versión de la URL firmada
+                    expiration=604800 ,   # Tiempo de expiración en segundos (una semana en este caso)
+                    method="GET"      # Método HTTP permitido (en este caso, una solicitud GET)
                 )
+        return signedUrl
 
-
-        return signed_url
-
+    # Método público para agregar libros
     def agregarLibro(self, isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad):
-            #print(f'idAutor en la funcion: {idAutor} ')
-            # 1. Subir la imagen de la portada a Firebase Storage
+            # Subir la imagen de la portada a Firebase Storage
             blob = bucket.blob("portadasLibros/" + portada.filename)
             blob.upload_from_string(portada.read(), content_type=portada.content_type)
 
-            # 2. Obtener la URL de la imagen cargada
-            portadaUrl = self.generar_url_firmada("portadasLibros/" + portada.filename, "biblioteca-1d610.appspot.com")
+            # Obtener la URL de la imagen cargada
+            portadaUrl = self.generarUrlFirmada("portadasLibros/" + portada.filename, "biblioteca-1d610.appspot.com")
 
             cantidad = int(cantidad)
-            # 3. Almacenar la URL de la imagen en Firestore junto con otros datos del libro
-            libro_data = {
+            
+            # Almacenar la URL de la imagen en Firestore junto con otros datos del libro
+            libroData = {
                 'isbn': isbn,
                 'titulo': titulo,
                 'portada': portadaUrl,  # URL de la imagen firmada
@@ -137,26 +142,24 @@ class Libro():
                 'cantidad': cantidad,
             }
             #print(libro_data)
-            creacionLibro = db.collection('libros').add(libro_data)
-            idLibro = creacionLibro[1].id
-            # Obtén el ID del documento creado
-            #print(f"ID del libro: {idLibro}")  # Agrega una impresión para verificar el ID del libro
+            creacionLibro = db.collection('libros').add(libroData)
+            idLibro = creacionLibro[1].id # Obtén el ID del documento creado
             return idLibro  # Devuelve solo el ID del libro como resultado
         
-
+    # Método público para actualizar libros
     def actualizarLibro(self, idLibro, isbn, titulo, portada, idAutor, idEditorial, idGenero, cantidad):
-        # 1. Subir la imagen de la portada a Firebase Storage si es necesario
+        # Subir la imagen de la portada a Firebase Storage si es necesario
         if portada is not None:
             blob = bucket.blob("portadasLibros/" + portada.filename)
             blob.upload_from_string(portada.read(), content_type=portada.content_type)
-            portadaUrl = self.generar_url_firmada("portadasLibros/" + portada.filename, "biblioteca-1d610.appspot.com")
+            portadaUrl = self.generarUrlFirmada("portadasLibros/" + portada.filename, "biblioteca-1d610.appspot.com")
         else:
             # Si la portada no cambió, conserva la URL existente
             existing_data = db.collection('libros').document(idLibro).get()
             portadaUrl = existing_data.get('portada')
 
-        # 2. Actualizar los datos del libro en Firestore
-        libro_data = {
+        # Actualizar los datos del libro en Firestore
+        libroData = {
             'isbn': isbn,
             'titulo': titulo,
             'portada': portadaUrl,  # URL de la imagen firmada
@@ -165,21 +168,23 @@ class Libro():
             'idGenero': idGenero,
             'cantidad': cantidad,
         }
-        db.collection('libros').document(idLibro).set(libro_data, merge=True)
+        db.collection('libros').document(idLibro).set(libroData, merge=True)
 
         # Devuelve el ID del libro actualizado
         return idLibro
-
+    
+    # Método público para eliminar libros por id
     def eliminarLibro(self, idLibro):
             if idLibro is not None:
                 # Elimina el libro de la base de datos usando su identificador (__idLibro)
                 db.collection("libros").document(idLibro).delete()
             else:
                 print("No se proporcionó un identificador de libro para la eliminación.")
-            
+    
+    # Método público para obtener la información detallada del libro mediante su id    
     def obtenerLibroPorId(self, idLibro):
         if idLibro is not None:
-            # Realiza una consulta para obtener los datos del libro por su ID
+            # Realiza una consulta para obtener los datos del libro por su id
             libroRef = db.collection("libros").document(idLibro)
             libroDoc = libroRef.get()
 
@@ -232,7 +237,7 @@ class Libro():
         else:
             return None  # No se proporcionó un ID de libro válido
 
-
+    # Metodo publico para buscar libros teniendo en cuenta el 'autor'
     def buscarPorAutor(self, descripcion):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
@@ -241,38 +246,38 @@ class Libro():
         autoresRef = db.collection('autor').where('descripcionAutor', '>=', descripcion).where('descripcionAutor', '<=', descripcion + '\uf8ff').stream()
 
         for autor in autoresRef:
-            # Obtenemos el ID del autor y su descripción
+            # Obtoene el id del autor 
             idAutor = autor.id
             #descripcionAutor = autor.to_dict().get('descripcionAutor')
 
-            # Ahora busca los libros que tengan el ID del autor en su lista de autores
+            # Ahora busca los libros que tengan el id del autor en su lista de autores
             librosRef = db.collection('libros').where('idAutor', 'array_contains', idAutor).stream()
 
             for libro in librosRef:
-                libro_data = libro.to_dict()
+                libroData = libro.to_dict()
                 idLibro = libro.id
                 
-                # Obtiene las descripciones de género y editorial utilizando la función obtenerDescripcionOpcion
-                idGenero = libro_data.get('idGenero')
-                idEditorial = libro_data.get('idEditorial')
-                idAutor = libro_data.get('idAutor')
+                # Obtiene las descripciones de autor, género y editorial utilizando la función obtenerDescripcionOpcion de la clase 'opciones'
+                idGenero = libroData.get('idGenero')
+                idEditorial = libroData.get('idEditorial')
+                idAutor = libroData.get('idAutor')
                 descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
                 descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
                 descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
-                titulo = libro_data.get('titulo')
+                titulo = libroData.get('titulo')
                 
                 # Agrega los resultados a la lista, incluyendo las descripciones de género y editorial
                 resultados.append({
                     "idLibro": idLibro,
                     "autor": descripcionAutor,
-                    "libro": libro_data,
+                    "libro": libroData,
                     "genero": descripcionGenero,
                     "editorial": descripcionEditorial
                 })
 
         return resultados
 
-
+    # Metodo publico para buscar libros teniendo en cuenta el 'genero'
     def buscarPorGenero(self, descripcion):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
@@ -281,21 +286,21 @@ class Libro():
         generoRef = db.collection('genero').where('descripcionGenero', '>=', descripcion).where('descripcionGenero', '<=', descripcion + '\uf8ff').stream()
 
         for genero in generoRef:
-            # Obtenemos el ID del género y su descripción
+            # Obtiene el id del género 
             idGenero = genero.id
             #descripcionGenero = genero.to_dict().get('descripcionGenero')
 
-            # Ahora busca los libros que tengan el ID del género
+            # Ahora busca los libros que tengan el id  del género
             librosRef = db.collection('libros').where('idGenero', 'array_contains', idGenero).stream()
 
             for libro in librosRef:
-                libro_data = libro.to_dict()
+                libroData = libro.to_dict()
 
                 idLibro = libro.id
-                # Obtiene las descripciones de autor y editorial utilizando la función obtenerDescripcionOpcion
-                idAutor = libro_data.get('idAutor')
-                idEditorial = libro_data.get('idEditorial')
-                idGenero = libro_data.get('idGenero')
+                # Obtiene las descripciones de autor, género y editorial utilizando la función obtenerDescripcionOpcion de la clase 'opciones'
+                idAutor = libroData.get('idAutor')
+                idEditorial = libroData.get('idEditorial')
+                idGenero = libroData.get('idGenero')
                 descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
                 descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
                 descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
@@ -304,14 +309,14 @@ class Libro():
                 resultados.append({
                     "idLibro": idLibro,
                     "genero": descripcionGenero,
-                    "libro": libro_data,
+                    "libro": libroData,
                     "autor": descripcionAutor,
                     "editorial": descripcionEditorial
                 })
 
         return resultados
 
-    
+    # Metodo publico para buscar libros teniendo en cuenta el 'editorial'
     def buscarPorEditorial(self, descripcion):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
@@ -320,7 +325,7 @@ class Libro():
         editorialRef = db.collection('editorial').where('descripcionEditorial', '>=', descripcion).where('descripcionEditorial', '<=', descripcion + '\uf8ff').stream()
 
         for editorial in editorialRef:
-            # Obtenemos el ID de la editorial y su descripción
+            # Obtenemos el id de la editorial 
             idEditorial = editorial.id
             #descripcionEditorial = editorial.to_dict().get('descripcionEditorial')
 
@@ -328,13 +333,13 @@ class Libro():
             librosRef = db.collection('libros').where('idEditorial', 'array_contains', idEditorial).stream()
 
             for libro in librosRef:
-                libro_data = libro.to_dict()
+                libroData = libro.to_dict()
 
                 idLibro = libro.id
-                # Obtiene las descripciones de autor y género utilizando la función obtenerDescripcionOpcion
-                idAutor = libro_data.get('idAutor')
-                idGenero = libro_data.get('idGenero')
-                idEditorial = libro_data.get('idEditorial')
+                # Obtiene las descripciones de autor, género y editorial utilizando la función obtenerDescripcionOpcion de la clase 'opciones'
+                idAutor = libroData.get('idAutor')
+                idGenero = libroData.get('idGenero')
+                idEditorial = libroData.get('idEditorial')
                 descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
                 descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
                 descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()
@@ -350,7 +355,7 @@ class Libro():
 
         return resultados
 
-        
+    # Metodo publico para buscar libros teniendo en cuenta el 'titulo'    
     def buscarPorTitulo(self, titulo):
         # Crea una lista vacía para almacenar los resultados
         resultados = []
@@ -368,6 +373,7 @@ class Libro():
             idGenero = datosLibro.get('idGenero')
             idEditorial = datosLibro.get('idEditorial')
             
+            # Obtiene las descripciones de autor, género y editorial utilizando la función obtenerDescripcionOpcion de la clase 'opciones'
             descripcionAutor = Autor(idOpcion=idAutor).obtenerDescripcionesOpcion()
             descripcionGenero = Genero(idOpcion=idGenero).obtenerDescripcionesOpcion()
             descripcionEditorial = Editorial(idOpcion=idEditorial).obtenerDescripcionesOpcion()

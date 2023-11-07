@@ -1,13 +1,16 @@
+#la clase Prestamo se utiliza para realizar los préstamos a los lectores registrados en el sistema. 
 class Prestamo:
     def __init__(self, lectorNombre, libroNombre, idLibro, cantidad, fechaEntrega, fechaDevolucion, estado):
-        self.__lectorNombre = lectorNombre
-        self.__libroNombre = libroNombre
-        self.__idLibro = idLibro
-        self.__cantidad = cantidad
-        self.__fechaEntrega = fechaEntrega
-        self.__fechaDevolucion = fechaDevolucion
-        self.__estado = estado
+        #se inicializan los atributos para el préstamos
+        self.__lectorNombre = lectorNombre #el nombre del lector al que se va a realizar el préstamos
+        self.__libroNombre = libroNombre #el nombre del libro que se prestará
+        self.__idLibro = idLibro #el id del libro a prestar
+        self.__cantidad = cantidad #la cantidad de ejemplares a prestar
+        self.__fechaEntrega = fechaEntrega #le fecha de entrega es la fecha en la cual el bibliotecario le entrega el libro al lector.
+        self.__fechaDevolucion = fechaDevolucion #la fecha de devolución es la fecha estimada que el lector debe devolver el libro. 
+        self.__estado = estado #los estados son: prestado, devuelvo, no devuelto
 
+    #ENCAPSULAMIENTO Y ABSTRACCIÓN
     def getLectorNombre(self):
         return self.__lectorNombre
 

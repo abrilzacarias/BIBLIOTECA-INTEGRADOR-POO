@@ -18,7 +18,7 @@ const firebaseConfig = {
         console.log('Usuario autenticado con Google:', user);
         
         // Redirige a la página de inicio, o realiza cualquier otra acción que desees.
-        window.location.href = '/inicio';  // Cambia '/inicio' según la URL de tu vista de inicio
+        window.location.href = '/listarLibros';  // Cambia '/listarLibros' según la URL de tu vista de listarLibros
       })
       .catch(function(error) {
         // Autenticación fallida, muestra un mensaje de error.

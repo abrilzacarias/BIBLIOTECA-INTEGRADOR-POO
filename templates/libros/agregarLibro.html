@@ -5,49 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario para Agregar un Nuevo Libro</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/libros/agregarLibro.css') }}" />
 </head>
 <body>
-    <h1>Agregar un nuevo libro</h1>
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
-    <form method="POST" action="/agregarLibro" id="libroForm" enctype="multipart/form-data">
-        <label for="titulo">Título:</label>
-        <input type="text" id="titulo" name="titulo" required><br>
 
-        <label for="isbn">ISBN:</label>
-        <input type="text" id="isbn" name="isbn" required><br>
+        <div class="row">
+            <div class="container-formulario">
+                <h2>Formulario de Agregar Libro</h2>
+                <ul>
+                    {% for error in error_messages %}
+                    <li style="color: red; font-weight: bold;">{{ error }}</li>
+                    {% endfor %}
+                  </ul>                  
+                    <form method="POST" action="/agregarLibro" id="libroForm" enctype="multipart/form-data">
+                        <label for="isbn">ISBN:</label>
+                        <input type="text" id="isbn" name="isbn" required><br>
 
+                        <label for="titulo">Título:</label>
+                        <input type="text" id="titulo" name="titulo" required><br>
 
-        <label for="portada">Portada:</label>
-        <input type="file" id="portada" name="portada" required><br>
+                        <label for="portada">Portada:</label>
+                        <input type="file" id="portada" name="portada" required><br>
 
-        <label for="idAutor">Autor:</label>
-        <input type="text" id="idAutor" name="idAutor[]" placeholder="Buscar autor..." data-filter-id="filtroAutor">
-        <button type="button" id="buscarAutor" onclick="listarOpciones('autor', 'resultadosAutor', 'autor', this.previousElementSibling.value)">Buscar</button>
-        <div id="resultadosAutor"></div>
-        
-        
-        <!-- Añade un formulario para agregar un nuevo autor -->   
-        <div id="checkboxes">
-            <!-- Tus checkboxes irán aquí -->
+                        <label for="idAutor" class="opcionesLabel">Autor:</label>
+                        <input type="text" id="idAutor" class="opcionesInput" name="idAutor[]" placeholder="Buscar autor..." data-filter-id="filtroAutor">
+                        <button type="button" id="buscarAutor" class="opcionesButton" onclick="listarOpciones('autor', 'resultadosAutor', 'autor', this.previousElementSibling.value)">Buscar</button>
+                        <div id="resultadosAutor"></div>
+                        
+                        <!-- Añade un formulario para agregar un nuevo autor -->   
+                        <!--<div id="checkboxes">
+                        </div> -->
+
+                        <label for="idEditorial" class="opcionesLabel">Editorial:</label>
+                        <input type="text" id="idEditorial" class="opcionesInput"  name="idEditorial[]" placeholder="Buscar editorial..." data-filter-id="filtroEditorial">
+                        <button type="button" id="buscarEditorial" class="opcionesButton" onclick="listarOpciones('editorial', 'resultadosEditorial', 'editorial', this.previousElementSibling.value)">Buscar</button>
+                        <div id="resultadosEditorial"></div>
+
+                        <label for="idGenero" class="opcionesLabel">Género:</label>
+                        <input type="text" id="idGenero" class="opcionesInput" name="idGenero[]" placeholder="Buscar genero..." data-filter-id="filtroGenero">
+                        <button type="button" id="buscarGenero" class="opcionesButton" onclick="listarOpciones('genero', 'resultadosGenero', 'genero', this.previousElementSibling.value)">Buscar</button>
+                        <div id="resultadosGenero"></div>
+
+                        
+                        <label for="cantidad">Cantidad:</label>
+                        <input type="number" id="cantidad" name="cantidad" required min="1"><br>
+
+                        <button type="submit" class="btn-agregar">Agregar</button>
+                    </form>
+            </div>
         </div>
-
-        <label for="idEditorial">Editorial:</label>
-        <input type="text" id="idEditorial" name="idEditorial[]" placeholder="Buscar editorial..." data-filter-id="filtroEditorial">
-        <button type="button" id="buscarEditorial" onclick="listarOpciones('editorial', 'resultadosEditorial', 'editorial', this.previousElementSibling.value)">Buscar</button>
-        <div id="resultadosEditorial"></div>
-
-        <label for="idGenero">Género:</label>
-        <input type="text" id="idGenero" name="idGenero[]" placeholder="Buscar genero..." data-filter-id="filtroGenero">
-        <button type="button" id="buscarGenero" onclick="listarOpciones('genero', 'resultadosGenero', 'genero', this.previousElementSibling.value)">Buscar</button>
-        <div id="resultadosGenero"></div>
-        
-        <label for="cantidad">Cantidad:</label>
-        <input type="text" id="cantidad" name="cantidad" required><br>
-
-        <button type="submit" class="btn agregar">Agregar</button>
-    </form>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="../static/js/opciones.js"></script>

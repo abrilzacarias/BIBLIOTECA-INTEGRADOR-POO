@@ -1,4 +1,7 @@
+#La clase Persona actúa como la clase padre o ABSTRACTA ya que no se la puede instanciar directamente. 
+#Hereda a la clase Bibliotecario todos sus atributos.
 class Persona():
+    #Constructor, se inicializan los atributos. 
     def __init__(self, nombre, apellido, dni, domicilio, telefono, email):
         self.__nombre = nombre
         self.__apellido = apellido
@@ -7,16 +10,17 @@ class Persona():
         self.__domicilio = domicilio
         self.__telefono = telefono
 
-    def getNombre(self):
+    #ENCAPSULAMIENTO Y ABSTRACCIÓN
+    def getNombre(self): #obtiene nombre
         return self.__nombre
     
-    def setNombre(self, nombre):
+    def setNombre(self, nombre): #establece nombre 
         self.__nombre = nombre
 
-    def getApellido(self):
+    def getApellido(self): #obtiene apellido
         return self.__apellido
     
-    def setApellido(self, apellido):
+    def setApellido(self, apellido): #establece apellido
         self.__apellido = apellido
 
     def getDni(self):

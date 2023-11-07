@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Libros, Lectores y Préstamos</title>
+    <title>REGISTRAR PRESTAMO</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../static/css/prestamos/registroPrestamo.css">
 </head>
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="container-formulario">
-                <h2>Formulario de Préstamo</h2>
+                <h2 class="titulo">Formulario de Préstamo</h2>
                 <form action="/realizarPrestamo" method="POST">
                     <label for="DNILector">DNI del Lector:</label>
                     <input type="text" name="DNILector" required><br>
@@ -25,7 +25,7 @@
                     <label for="fechaDevolucion">Fecha de Devolución:</label>
                     <input type="date" id="fechaDevolucion" name="fechaDevolucion" required><br><br>
 
-                    <input type="submit" value="Realizar Préstamo">
+                    <input type="submit" value="Realizar Préstamo" class="boton-registrar">
                 </form>
                 {% if errorMsj %}
                     <p>{{ errorMsj }}</p>
@@ -34,10 +34,10 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container lista-libros">
         <div class="row">
             <div class="col-md-12">
-                <h2>Lista de Libros</h2>
+                <h2 class="titulo">Lista de Libros</h2>
                 <table>
                     <thead>
                         <tr>
@@ -75,7 +75,5 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
 
 

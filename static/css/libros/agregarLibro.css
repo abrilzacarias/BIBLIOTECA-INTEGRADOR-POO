@@ -22,36 +22,37 @@ h2 {
 
 .container {
     background-color: white;
+    border-radius: 50px;
     margin: 40px;
-    margin-left: 210px;
     text-align: center;
-    width: 50%;
+    width: 100%;
 }
 
 .container-formulario{
     background-color: white;
     border-radius: 50px;
     margin: 30px;
-    padding-top: 10px;
-    margin-left: -50px;
-    margin-right: 80px;
-    height: 90vh;
+    margin-left: 50px;
+    margin-right: 30px;
     text-align: center;
-    width: 330%;
+    width: 600px;
+    padding: 30px;
 }
 
 input {
     border: none;
     border-radius: 100px;
     padding: 10px;
-    width: 90%; /* Ancho del 100% para ocupar todo el contenedor */
+    width: 100%; /* Ancho del 100% para ocupar todo el contenedor */
     margin: 10px 0; /* Aumenta el espacio vertical entre los campos de entrada */
     border: 2px solid var(--colors-grey, #EBEAED);
 }
 
-.boton-registrar {
+
+.btn-agregar {
     height: 50px;
     font-size: 16px;
+    margin: 30px 40px;
     padding: 10px 20px;
     background-color: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
@@ -59,7 +60,8 @@ input {
     border-radius: 100px;
     cursor: pointer;
 }
-.boton-registrar:hover {
+
+.btn-agregar:hover {
     background-color: rgb(29, 29, 29);
 }
 
@@ -68,12 +70,18 @@ input {
     justify-content: space-between;
 }
 
-.lista-libros {
-    overflow-y: auto;
-    max-height: 100vh; /* Ajusta esta altura según tus necesidades */
-    width: 100vh; 
+/* Alineación de botones al lado de los campos de entrada */
+.opcionesLabel {
+    display: block; /* Hace que el label ocupe toda la anchura y esté arriba */
+    width: 100px; /* Ajusta el ancho del label según tus necesidades */
+    text-align: center; /* Alinea el texto del label a la derecha */
+    margin-left:215px; /* Espacio entre el label y el input */
 }
 
-.titulo {
-    margin-top: 10px;
+.opcionesInput{
+    width: 450px; /* Ajusta el ancho del input según tus necesidades */
+}
+
+.opcionesButton{
+    margin-left: 10px; /* Espacio entre el input y el botón */
 }
