@@ -59,3 +59,6 @@ class Prestamo:
     def setEstado(self, estado):
         self.__estado = estado
 
+    # Método privado para obtener información de un préstamo
+    def __obtenerDatos(self):
+        return f"Lector: {self._lectorNombre}, Libro: {self.libroNombre}, ID del libro: {self.idLibro}, Cantidad: {self.cantidad}, Fecha de entrega: {self.fechaEntrega}, Fecha de devolución: {self.fechaDevolucion}, Estado: {self._estado}"

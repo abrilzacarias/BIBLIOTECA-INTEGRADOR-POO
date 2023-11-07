@@ -29,7 +29,9 @@ def verificarSesion(fn):
         else:
             # El bibliotecario no está en sesión, redirige a la página de inicio de sesión
             return redirect(url_for('login'))
-
+    # Asigna el nombre de la función original al envoltorio
+    wrapper.__name__ = fn.__name__
+    return wrapper
 
 #página principal
 @app.route ('/', methods=['GET', 'POST'])
@@ -88,9 +90,10 @@ def login():
         if response.status_code == 200:
             respuestaVerificacion = inicioSesionUsuario.verificarConfirmacionMail(email)
             if respuestaVerificacion == True:
-                user_data = response.json()
-                user_id = user_data['localId']
-                print(user_id)
+                userData = response.json()
+                user = userData['localId']
+                if user:
+                    session['idUser'] = user[0]
                 return redirect(url_for('listarLibros'))
             else:
                 error_message = 'No se ha verificado su correo electrónico. Por favor, revise su correo.'
@@ -122,9 +125,9 @@ def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/listarSeleccion', methods=['GET', 'POST'])
 #listarSeleccion depende de la eleccion de visualizar autor, editorial o genero. En caso de elegir alguno, se 
 #utiliza la misma plantilla html para listar cada uno de ellos, sin neecesidad de crear una plantilla individual para cada uno. 
+@app.route('/listarSeleccion', methods=['GET', 'POST'])
 @verificarSesion
 def listarSeleccion(): 
     nombreColeccion = request.args.get('nombreColeccion')
@@ -207,7 +210,6 @@ def agregarLector():
             
 
             if not error_message:  # Si no hay mensajes de error, procede a registrar al usuario
-                print(f'nombre{nombre}, ape{apellido}, dni{dni}, dom{domicilio}, tel{telefono}, email{email}')
                 bibliotecario.agregarLector(nombre, apellido, dni, domicilio, telefono, email)
                 #en caso de no presentar incovenientes se agrega al lector y se crea la instancia de la clase. 
                 lector = Lector(nombre, apellido, dni, domicilio, telefono, email)
@@ -294,6 +296,8 @@ def realizarPrestamo():
             prestamo = bibliotecario.realizarPrestamo(dniLector, idLibro, cantidad, fechaActual, fechaDevolucion, estado)
             if prestamo == False:
                 error = "La cantidad de libros en stock no es suficiente para realizar el préstamo."
+                lectores = bibliotecario.mostrarLectores()
+                print(lectores)
                 return render_template('prestamos/registroPrestamo.html', lectores=lectores, error=error)
             else:
                 prestamos = bibliotecario.mostrarPrestamos()

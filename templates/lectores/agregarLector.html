@@ -47,11 +47,11 @@
             </div>
             
         </form>
-
+        {% if error_message %}
+            <p>{{ error_message }}</p>
+        {% endif %}
         <a href="/verLectores" class="btn-back">Atras</a>
     </div>
-    {% if error_message %}
-        <p>{{ error_message }}</p>
-    {% endif %}
+    
 </body>
 </html>

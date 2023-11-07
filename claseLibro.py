@@ -348,7 +348,7 @@ class Libro():
                 resultados.append({
                     "idLibro": idLibro,
                     "editorial": descripcionEditorial,
-                    "libro": libro_data,
+                    "libro": libroData,
                     "autor": descripcionAutor,
                     "genero": descripcionGenero
                 })
